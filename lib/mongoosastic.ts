@@ -1,7 +1,15 @@
-import elasticsearch, { Client as EsClient } from 'elasticsearch';
+import elasticsearch, {
+  Client,
+  Client as EsClient,
+  ConfigOptions,
+  IndexDocumentParams,
+  SearchParams,
+} from 'elasticsearch';
 import events from 'events';
 import { Generator } from './mapping-generator';
 import { serialize } from './serialize';
+import { MongoosasticBulkIndexOpts, MongoosasticOpts, MongoosasticSchema } from './types';
+import { Schema } from 'mongoose';
 
 const nop = function nop() {};
 
@@ -13,14 +21,12 @@ function isStringArray(arr: any) {
   return arr.filter && arr.length === arr.filter((item: any) => typeof item === 'string').length;
 }
 
-function createEsClient(options: any) {
-  const esOptions = {};
+function createEsClient(options: MongoosasticOpts) {
+  const esOptions: ConfigOptions = {};
 
   if (Array.isArray(options.hosts)) {
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'host' does not exist on type '{}'.
     esOptions.host = options.hosts;
   } else {
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'host' does not exist on type '{}'.
     esOptions.host = {
       host: options && options.host ? options.host : 'localhost',
       port: options && options.port ? options.port : 9200,
@@ -30,25 +36,20 @@ function createEsClient(options: any) {
     };
   }
 
-  // @ts-expect-error ts-migrate(2339) FIXME: Property 'log' does not exist on type '{}'.
   esOptions.log = options ? options.log : null;
 
   return new elasticsearch.Client(esOptions);
 }
 
 function filterMappingFromMixed(props: any) {
-  const filteredMapping = {};
+  const filteredMapping: Record<string, any> = {};
   Object.keys(props).map((key) => {
     const field = props[key];
     if (field.type !== 'mixed') {
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       filteredMapping[key] = field;
       if (field.properties) {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         filteredMapping[key].properties = filterMappingFromMixed(field.properties);
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         if (!Object.keys(filteredMapping[key].properties).length) {
-          // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           delete filteredMapping[key].properties;
         }
       }
@@ -57,7 +58,14 @@ function filterMappingFromMixed(props: any) {
   return filteredMapping;
 }
 
-function createMappingIfNotPresent(options: any, cb: any) {
+async function createMappingIfNotPresent(options: {
+  client: Client;
+  indexName: string;
+  typeName: string;
+  schema: Schema<any>;
+  settings: any;
+  properties: any;
+}) {
   const client = options.client;
   const indexName = options.indexName;
   const typeName = options.typeName;
@@ -65,72 +73,41 @@ function createMappingIfNotPresent(options: any, cb: any) {
   const settings = options.settings;
   const properties = options.properties;
 
-  const completeMapping = {};
-  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+  const completeMapping: Record<string, any> = {};
   completeMapping[typeName] = Generator.generateMapping(schema);
 
-  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   completeMapping[typeName].properties = filterMappingFromMixed(completeMapping[typeName].properties);
 
   if (properties) {
     Object.keys(properties).map((key) => {
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       completeMapping[typeName].properties[key] = properties[key];
     });
   }
 
-  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const inputMapping = completeMapping[typeName];
-  client.indices.exists(
-    {
+
+  const exists = await client.indices.exists({
+    index: indexName,
+  });
+
+  if (exists) {
+    return await client.indices.putMapping({
+      type: undefined, // deprecated
       index: indexName,
-    },
-    (err: any, exists: any) => {
-      if (err) {
-        return cb(err);
-      }
+      body: inputMapping,
+    });
+  }
 
-      if (exists) {
-        return client.indices.putMapping(
-          {
-            index: indexName,
-            body: inputMapping,
-          },
-          (err: any) => {
-            cb(err, inputMapping);
-          }
-        );
-      }
-      return client.indices.create(
-        {
-          index: indexName,
-          body: settings,
-        },
-        (indexErr: any) => {
-          if (indexErr) {
-            return cb(indexErr);
-          }
-
-          client.indices.putMapping(
-            {
-              index: indexName,
-              body: inputMapping,
-            },
-            (err: any) => {
-              cb(err, inputMapping);
-            }
-          );
-        }
-      );
-    }
-  );
+  return await client.indices.create({
+    index: indexName,
+    body: { settings, mappings: inputMapping },
+  });
 }
 
 async function hydrate(res: any, model: any, options: any) {
   const results = res.hits;
-  const resultsMap = {};
+  const resultsMap: Record<string, string> = {};
   const ids = results.hits.map((result: any, idx: any) => {
-    // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     resultsMap[result._id] = idx;
     return result._id;
   });
@@ -150,7 +127,7 @@ async function hydrate(res: any, model: any, options: any) {
 
   const docs = await query.exec();
   let hits;
-  const docsMap = {};
+  const docsMap: Record<string, string> = {};
 
   if (!docs || docs.length === 0) {
     results.hits = [];
@@ -164,16 +141,13 @@ async function hydrate(res: any, model: any, options: any) {
   } else {
     // Preserve ES result ordering
     docs.forEach((doc: any) => {
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       docsMap[doc._id] = doc;
     });
-    // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     hits = results.hits.map((result: any) => docsMap[result._id]);
   }
 
   if (options.highlight || options.hydrateWithESResults) {
     hits.forEach((doc: any) => {
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       const idx = resultsMap[doc._id];
       if (options.highlight) {
         doc._highlight = results.hits[idx].highlight;
@@ -214,37 +188,29 @@ async function deleteByMongoId(options: any) {
   model.emit('es-removed', null, res);
 }
 
-export function mongoosastic(schema: any, pluginOpts: any) {
-  const options = pluginOpts || {};
+export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: MongoosasticOpts) {
+  const options = pluginOpts || ({} as MongoosasticOpts);
 
   let bulkTimeout: any;
   let bulkBuffer: any = [];
-  let esClient: EsClient;
-  const populate = options && options.populate;
+  const {
+    populate,
+    hydrate: alwaysHydrate,
+    hydrateOptions: defaultHydrateOptions,
+    filter,
+    transform,
+    routing,
+    customProperties,
+    customSerialize,
+    forceIndexRefresh,
+  } = options;
+
   const mapping = Generator.generateMapping(schema);
-
-  let indexName = options && options.index;
-  let typeName = options && options.type;
-  const alwaysHydrate = options && options.hydrate;
-  const defaultHydrateOptions = options && options.hydrateOptions;
-  let bulk = options && options.bulk;
-  const filter = options && options.filter;
-  const transform = options && options.transform;
-  const routing = options && options.routing;
-
-  const customProperties = options && options.customProperties;
-  const customSerialize = options && options.customSerialize;
-  const forceIndexRefresh = options && options.forceIndexRefresh;
   const indexAutomatically = !(options && options.indexAutomatically === false);
   const saveOnSynchronize = !(options && options.saveOnSynchronize === false);
-
   const bulkErrEm = new events.EventEmitter();
-
-  if (options.esClient) {
-    esClient = options.esClient;
-  } else {
-    esClient = createEsClient(options);
-  }
+  const esClient = options.esClient ?? createEsClient(options);
+  let { index: indexName, type: typeName, bulk } = options;
 
   function setIndexNameIfUnset(model: any) {
     const modelName = model.toLowerCase();
@@ -342,29 +308,18 @@ export function mongoosastic(schema: any, pluginOpts: any) {
    * and a callback that will be called once the mapping is created
 
    * @param inSettings
-   * @param inCb
    */
-  schema.statics.createMapping = async function createMapping(inSettings: any, inCb: any) {
-    let cb = inCb;
-    let settings = inSettings;
-    if (arguments.length < 2) {
-      cb = inSettings || nop;
-      settings = undefined;
-    }
-
+  schema.statics.createMapping = async function createMapping(inSettings: any) {
     setIndexNameIfUnset(this.modelName);
 
-    createMappingIfNotPresent(
-      {
-        client: esClient,
-        indexName: indexName,
-        typeName: typeName,
-        schema: schema,
-        settings: settings,
-        properties: customProperties,
-      },
-      cb
-    );
+    await createMappingIfNotPresent({
+      client: esClient,
+      indexName: indexName,
+      typeName: typeName,
+      schema: schema,
+      settings: inSettings,
+      properties: customProperties,
+    });
   };
 
   /**
@@ -411,28 +366,23 @@ export function mongoosastic(schema: any, pluginOpts: any) {
 
     if (transform) serialModel = transform(serialModel, this);
 
-    const _opts = {
+    const _opts: MongoosasticBulkIndexOpts = {
       index: index,
       refresh: forceIndexRefresh,
     };
     if (routing) {
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'routing' does not exist on type '{ index... Remove this comment to see the full error message
       _opts.routing = routing(this);
     }
 
     if (bulk) {
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'model' does not exist on type '{ index: ... Remove this comment to see the full error message
       _opts.model = serialModel;
-      // @ts-expect-error ts-migrate(2339) FIXME: Property '_id' does not exist on type '{ index: an... Remove this comment to see the full error message
       _opts._id = this._id;
       await bulkIndex(_opts);
       return this;
     } else {
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type '{ index: any... Remove this comment to see the full error message
       _opts.id = this._id.toString();
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'body' does not exist on type '{ index: a... Remove this comment to see the full error message
       _opts.body = serialModel;
-      return esClient.index(_opts as any);
+      return esClient.index(_opts as IndexDocumentParams<any>);
     }
   };
 
@@ -482,29 +432,20 @@ export function mongoosastic(schema: any, pluginOpts: any) {
     // or recreate index better?
     opts.index = opts.index || indexName;
 
-    const esQuery = {
-      body: {
-        query: {
-          match_all: {},
-        },
-      },
-      index: opts.index,
-    };
+    const settingsRes = await esClient.indices.getSettings(opts);
+    const mappingsRes = await esClient.indices.getMapping(opts);
 
-    const res = reformatESTotalNumber(await esClient.search(esQuery));
-    let i = 0;
-    if (res.hits.total) {
-      for (const doc of res.hits.hits) {
-        console.log({ tot: res.hits.total, i });
-        i++;
-        opts.model = doc;
-        if (routing) {
-          (doc._source as any)._id = doc._id;
-          opts.routing = routing(doc._source);
-        }
-        await bulkDelete(opts);
-      }
-    }
+    const indexSettings = settingsRes?.[indexName].settings || {};
+    delete indexSettings?.index?.creation_date;
+    delete indexSettings?.index?.provided_name;
+    delete indexSettings?.index?.uuid;
+    delete indexSettings?.index?.version;
+
+    try {
+      await esClient.indices.delete(opts);
+    } catch (e) {}
+
+    return await this.createMapping(indexSettings);
   };
 
   /**
@@ -593,15 +534,12 @@ export function mongoosastic(schema: any, pluginOpts: any) {
    *
    * @param inQuery - query object to perform search with
    * @param inOpts - (optional) special search options, such as hydrate
-   * @param inCb - callback called with search results
    */
-  schema.statics.search = async function search(inQuery: any, inOpts: any, inCb: any) {
-    let cb = inCb;
+  schema.statics.search = async function search(inQuery: any, inOpts: any) {
     let opts = inOpts;
     const query = inQuery === null ? undefined : inQuery;
 
     if (arguments.length === 2) {
-      cb = arguments[1];
       opts = {};
     }
 
@@ -611,7 +549,7 @@ export function mongoosastic(schema: any, pluginOpts: any) {
 
     const esSearch = schema.statics.esSearch.bind(this);
 
-    return esSearch(fullQuery, opts, cb);
+    return esSearch(fullQuery, opts);
   };
 
   /**
@@ -639,13 +577,12 @@ export function mongoosastic(schema: any, pluginOpts: any) {
 
     setIndexNameIfUnset(this.modelName);
 
-    const esQuery = {
+    const esQuery: SearchParams = {
       body: query,
       index: opts.index || indexName,
     };
 
     if (opts.routing) {
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'routing' does not exist on type '{ body:... Remove this comment to see the full error message
       esQuery.routing = opts.routing;
     }
 
@@ -667,13 +604,12 @@ export function mongoosastic(schema: any, pluginOpts: any) {
 
     Object.keys(opts).forEach((opt) => {
       if (!opt.match(/(hydrate|sort|aggs|highlight|suggest)/) && opts.hasOwnProperty(opt)) {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        // @ts-ignore
         esQuery[opt] = opts[opt];
       }
 
       if (opts.sort) {
         if (isString(opts.sort) || isStringArray(opts.sort)) {
-          // @ts-expect-error ts-migrate(2339) FIXME: Property 'sort' does not exist on type '{ body: an... Remove this comment to see the full error message
           esQuery.sort = opts.sort;
         } else {
           esQuery.body.sort = opts.sort;
@@ -698,27 +634,17 @@ export function mongoosastic(schema: any, pluginOpts: any) {
     return res;
   }
 
-  schema.statics.esCount = function esCount(inQuery: any, inCb: any) {
-    let cb = inCb;
-    let query = inQuery;
-
+  schema.statics.esCount = async function esCount(query?: Record<string, string>) {
     setIndexNameIfUnset(this.modelName);
-
-    if (!cb && typeof query === 'function') {
-      cb = query;
-      query = {
-        match_all: {},
-      };
-    }
 
     const esQuery = {
       body: {
-        query: query,
+        query: query ?? { match_all: {} },
       },
       index: indexName,
     };
 
-    esClient.count(esQuery, cb);
+    return await esClient.count(esQuery);
   };
 
   schema.statics.flush = async function flush() {
@@ -759,14 +685,14 @@ export function mongoosastic(schema: any, pluginOpts: any) {
       return;
     }
 
-    const opts = {
+    const opts: Record<string, any> = {
       index: indexName,
       tries: 3,
       model: doc,
       client: esClient,
     };
+
     if (routing) {
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'routing' does not exist on type '{ index... Remove this comment to see the full error message
       opts.routing = routing(doc);
     }
 

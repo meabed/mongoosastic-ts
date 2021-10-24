@@ -4,6 +4,7 @@ import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
 import { mongoosastic } from '../../lib/mongoosastic';
 
 export interface IBlogModel extends Document, MongoosasticDocument {
+  title?: string;
   user?: string;
   userId?: number;
   post_date?: Date;
@@ -11,7 +12,12 @@ export interface IBlogModel extends Document, MongoosasticDocument {
 }
 
 const BlogSchema = new mongoose.Schema<IBlogModel>({
+  title: {
+    type: String,
+    es_boost: 2.0,
+  },
   user: String,
+  userId: String,
   post_date: {
     type: Date,
     es_type: 'date',
@@ -19,11 +25,7 @@ const BlogSchema = new mongoose.Schema<IBlogModel>({
   message: {
     type: String,
   },
-  title: {
-    type: String,
-    es_boost: 2.0,
-  },
-} as any); // todo fix in typing
+});
 
 BlogSchema.plugin(mongoosastic, {
   index: 'blogs',
