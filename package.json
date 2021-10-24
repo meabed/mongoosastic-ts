@@ -1,26 +1,28 @@
 {
-  "author": "Mohamed Meabed <mo.meabed@gmail.com> (https://meabed.com)",
   "name": "mongoosastic-ts",
-  "description": "A mongoose plugin that indexes models into elastic search",
   "version": "5.0.0",
-  "tags": [
-    "mongodb",
-    "elasticsearch",
-    "elastic search",
-    "mongoose",
-    "full text search"
-  ],
+  "description": "A mongoose plugin that indexes models into elastic search",
   "repository": {
     "type": "git",
     "url": "git://github.com/meabed/mongoosastic-ts"
   },
-  "main": "lib/mongoosastic.js",
+  "license": "MIT",
+  "author": "Mohamed Meabed <mo.meabed@gmail.com> (https://meabed.com)",
+  "main": "lib/mongoosastic.ts",
+  "scripts": {
+    "authors": "./scripts/update_authors.sh",
+    "changelog": "changelog mongoosastic/mongoosastic latest -m",
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint lib test",
+    "lint-fix": "npm run lint -- --fix",
+    "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha --timeout 5000 -r ts-node/register --file ./test/setup.ts --file ./test/teardown.ts 'test/*.ts'"
+  },
   "dependencies": {
     "elasticsearch": "16.7.2",
     "lodash.clonedeep": "4.5.0"
   },
   "devDependencies": {
-    "@types/async": "3.2.1",
     "@types/chai": "^4.2.22",
     "@types/elasticsearch": "5.0.38",
     "@types/eslint": "7.28.2",
@@ -28,7 +30,6 @@
     "@types/lodash.clonedeep": "4.5.0",
     "@types/mocha": "^9.0.0",
     "@types/prettier": "^2.4.1",
-    "async": "3.2.1",
     "chai": "^4.3.4",
     "changelog": "1.4.2",
     "co-mocha": "1.2.2",
@@ -51,14 +52,11 @@
   "engines": {
     "node": ">= 8.0"
   },
-  "scripts": {
-    "authors": "./scripts/update_authors.sh",
-    "lint-fix": "npm run lint -- --fix",
-    "lint": "eslint lib test",
-    "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha --timeout 5000 -r ts-node/register --file ./test/setup.ts --file ./test/teardown.ts 'test/*.ts'",
-    "coverage": "cat ./coverage/lcov.info | coveralls",
-    "changelog": "changelog mongoosastic/mongoosastic latest -m"
-  },
-  "license": "MIT"
+  "tags": [
+    "mongodb",
+    "elasticsearch",
+    "elastic search",
+    "mongoose",
+    "full text search"
+  ]
 }
