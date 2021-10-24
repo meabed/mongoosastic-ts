@@ -5,6 +5,11 @@
   },
   "extends": "standard",
   "rules": {
+    "space-before-function-paren": "off",
+    "no-unreachable-loop": "off",
+    "no-unreachable": "off",
+    "semi": "off",
+    "comma-dangle": "off",
     "no-prototype-builtins": 0,
     "handle-callback-err": "off",
     "node/handle-callback-err": "off",

@@ -150,8 +150,8 @@
     * updated the index method to allow for specifying a custom serialize method
     * added test for the custom serializer
     * removed lodash include
-    * fixed a bug/typo in the config.js createModelAndEnsureIndex method
-    * removed debug code from config.js
+    * fixed a bug/typo in the config.ts createModelAndEnsureIndex method
+    * removed debug code from config.ts
   * Eliminate Mongoose Query.prototype.stream() deprecation warning ([#243](https://github.com/mongoosastic/mongoosastic/issues/243))
     * Eliminate Mongoose deprecation warning for Query.prototype.stream() [#230](https://github.com/mongoosastic/mongoosastic/issues/230)
     * Add "Matt Audesse <matt@mattaudesse.com>" to AUTHORS

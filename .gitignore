@@ -4,3 +4,4 @@ node_modules
 coverage
 .coveralls.yml
 *.swp
+.nyc_output/
