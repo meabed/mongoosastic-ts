@@ -39,7 +39,7 @@ export interface MongoosasticOpts {
   customProperties?: any;
   routing?: any;
   transform: (doc: any, row: any) => any;
-  filter: any;
+  filter: (doc: any) => any;
   bulk: {
     batch: number; // preferred number of docs to bulk index
     size: number; // preferred number of docs to bulk index

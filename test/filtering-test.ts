@@ -1,4 +1,4 @@
-import { createModelAndEnsureIndex, createModelAndSave, deleteIndexIfExists, sleep } from './helper';
+import { createModelAndEnsureIndex, deleteIndexIfExists, sleep } from './helper';
 import { movieModel } from './models/movie';
 
 describe('Filter mode', async () => {
@@ -28,11 +28,13 @@ describe('Filter mode', async () => {
   });
 
   it('should not index action genre', async () => {
-    await createModelAndSave(movieModel, {
+    await movieModel.create({
       title: 'Man in Black',
       genre: 'action',
     });
+
     await sleep(1400);
+
     const results = await movieModel.search({
       term: {
         genre: 'action',
@@ -58,7 +60,7 @@ describe('Filter mode', async () => {
 
     movie.genre = 'action';
     await movie.save();
-
+    await sleep(1400);
     const results2 = await movieModel.search({
       term: {
         title: 'rec',

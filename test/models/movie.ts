@@ -27,6 +27,9 @@ const MovieSchema = new mongoose.Schema<IMovieModel>({
 MovieSchema.plugin(mongoosastic, {
   index: 'movies',
   type: 'movie',
+  filter: (self) => {
+    return self.genre === 'action';
+  },
 } as MongoosasticOpts);
 
 export const movieModel = mongoose.model<IMovieModel, MongoosasticModel<IMovieModel>>('Movie', MovieSchema);

@@ -22,14 +22,14 @@ export async function deleteDocs(models: any) {
   }
 }
 
-export async function createModelAndEnsureIndex(Model: any, obj: any) {
-  const doc = Model.create(obj);
+export async function createModelAndEnsureIndex(model: any, obj: any) {
+  const doc = model.create(obj);
   await sleep(200);
   return doc;
 }
 
-export async function createModelAndSave(Model: any, obj: any) {
-  const doc = Model.create(obj);
+export async function createModelAndSave(model: any, obj: any) {
+  const doc = model.create(obj);
   await sleep(200);
   return doc;
 }

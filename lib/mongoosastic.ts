@@ -169,19 +169,20 @@ async function deleteByMongoId(options: any) {
   let tries = options.tries;
 
   const res = await client.delete({
+    maxRetries: tries,
     type: '_doc',
     index: index,
     id: model._id.toString(),
     routing: routing,
   });
-  // todo check retried or implement it natively in the client
-  //
-  //         options.tries = --tries;
-  //         setTimeout(async () => {
-  //           await deleteByMongoId(options);
-  //         }, 500);
-  // todo check this events and test them
-  model.emit('es-removed', null, res);
+
+  if (res.result === 'deleted') {
+    model.emit('es-removed', null, res);
+  } else {
+    model.emit('es-removed', res, res);
+  }
+
+  return res;
 }
 
 export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: MongoosasticOpts) {
@@ -242,8 +243,12 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       //     })
       //     .catch(onIndex);
       // } else {
-      await _doc.index(onIndex);
-      // }
+      try {
+        const res = await _doc.index();
+        onIndex(null, res);
+      } catch (e) {
+        onIndex(e, null);
+      }
     }
   }
 
@@ -330,16 +335,9 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     return Generator.getCleanTree(schema);
   };
 
-  /**
-   * @param inOpts
-   */
-  schema.methods.index = async function schemaIndex(inOpts: any) {
+  schema.methods.index = async function schemaIndex(inOpts: any = {}) {
     let serialModel;
     let opts = inOpts;
-
-    if (arguments.length < 2) {
-      opts = {};
-    }
 
     if (filter && filter(this)) {
       return this.unIndex();
@@ -382,51 +380,37 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
   /**
    * Unset elasticsearch index
-   * @param inOpts
    */
-  schema.methods.unIndex = async function unIndex(inOpts?: any) {
-    let opts = inOpts;
-
-    if (arguments.length < 2) {
-      opts = {};
-    }
-
+  schema.methods.unIndex = async function unIndex(inOpts: any = {}) {
     setIndexNameIfUnset(this.constructor.modelName);
 
-    opts.index = opts.index || indexName;
-    opts.type = opts.type || typeName;
-    opts.model = this;
-    opts.client = esClient;
-    opts.tries = opts.tries || 3;
+    inOpts.index = inOpts.index || indexName;
+    inOpts.type = inOpts.type || typeName;
+    inOpts.model = this;
+    inOpts.client = esClient;
+    inOpts.tries = inOpts.tries || 3;
     if (routing) {
-      opts.routing = routing(this);
+      inOpts.routing = routing(this);
     }
 
     if (bulk) {
-      return bulkDelete(opts);
+      return await bulkDelete(inOpts);
     } else {
-      return deleteByMongoId(opts);
+      return await deleteByMongoId(inOpts);
     }
   };
 
   /**
    * Delete all documents from a type/index
-   * @param inOpts
    */
-  schema.statics.esTruncate = async function esTruncate(inOpts: any) {
-    let opts = inOpts;
-
-    if (arguments.length < 2) {
-      opts = {};
-    }
-
+  schema.statics.esTruncate = async function esTruncate(inOpts: any = {}) {
     setIndexNameIfUnset(this.modelName);
 
     // todo fix pagination and only get ids
     // or recreate index better?
-    opts.index = opts.index || indexName;
+    inOpts.index = inOpts.index || indexName;
 
-    const settingsRes = await esClient.indices.getSettings(opts);
+    const settingsRes = await esClient.indices.getSettings(inOpts);
 
     const indexSettings = settingsRes?.[indexName].settings || {};
     delete indexSettings?.index?.creation_date;
@@ -439,7 +423,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     // const indexMappings = mappingsRes?.[indexName].mappings || {};
 
     try {
-      await esClient.indices.delete(opts);
+      await esClient.indices.delete(inOpts);
     } catch (e) {}
 
     return await this.createMapping(indexSettings);
@@ -447,9 +431,6 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
   /**
    * Synchronize an existing collection
-   *
-   * @param inQuery
-   * @param inOpts
    */
   schema.statics.synchronize = async function synchronize(inQuery: any, inOpts: any) {
     const em = new events.EventEmitter();
@@ -526,19 +507,11 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
   /**
    * ElasticSearch search function
-   *
    * Wrapping schema.statics.es_search().
-   *
-   * @param inQuery - query object to perform search with
-   * @param inOpts - (optional) special search options, such as hydrate
    */
   schema.statics.search = async function search(inQuery: any, inOpts: any) {
     let opts = inOpts;
     const query = inQuery === null ? undefined : inQuery;
-
-    if (arguments.length === 2) {
-      opts = {};
-    }
 
     const fullQuery = {
       query: query,
@@ -557,18 +530,11 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
    *
    * @param inQuery - **full** query object to perform search with
    * @param inOpts - (optional) special search options, such as hydrate
-   * @param inCb - callback called with search results
    */
-  schema.statics.esSearch = async function (inQuery: any, inOpts: any, inCb: any) {
+  schema.statics.esSearch = async function (inQuery: any, inOpts: any) {
     const _this = this;
-    let cb = inCb;
     let opts = inOpts ?? {};
     const query = inQuery === null ? undefined : inQuery;
-
-    if (arguments.length === 2) {
-      cb = arguments[1];
-      opts = {};
-    }
 
     opts.hydrateOptions = opts?.hydrateOptions || defaultHydrateOptions || {};
 
@@ -660,21 +626,11 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     bulkBuffer = [];
   };
 
-  schema.statics.refresh = async function refresh(inOpts: any, inCb: any) {
-    let cb = inCb;
-    let opts = inOpts;
-    if (arguments.length < 2) {
-      cb = inOpts || nop;
-      opts = {};
-    }
-
+  schema.statics.refresh = async function refresh(inOpts: any = {}) {
     setIndexNameIfUnset(this.modelName);
-    esClient.indices.refresh(
-      {
-        index: opts.index || indexName,
-      },
-      cb
-    );
+    return await esClient.indices.refresh({
+      index: inOpts.index || indexName,
+    });
   };
 
   async function postRemove(doc: any) {
