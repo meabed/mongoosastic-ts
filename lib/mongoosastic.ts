@@ -76,7 +76,6 @@ async function createMappingIfNotPresent(options: {
   } else {
     completeMapping[typeName] = mappings;
   }
-  console.log({ mappings });
 
   const inputMapping = completeMapping[typeName];
 

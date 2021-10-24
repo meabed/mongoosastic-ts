@@ -34,14 +34,10 @@ export async function createModelAndSave(Model: any, obj: any) {
   return doc;
 }
 
-export function saveAndWaitIndex(model: any, cb: any) {
-  model.save(function (err: any) {
-    if (err) cb(err);
-    else {
-      model.once('es-indexed', cb);
-      model.once('es-filtered', cb);
-    }
-  });
+export async function saveAndWaitIndex(model: any) {
+  await model.save();
+  // model.once('es-indexed', cb);
+  // model.once('es-filtered', cb);
 }
 
 export function bookTitlesArray(): string[] {
