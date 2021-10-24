@@ -4,7 +4,6 @@ on:
     paths:
       - 'lib/**'
       - 'test/**'
-      - 'yarn.lock'
       - 'package.json'
       - 'package-lock.json'
     branches:
@@ -46,10 +45,8 @@ jobs:
           fetch-depth: 30
           persist-credentials: false
 
-      - name: Yarn install
+      - name: NPM install
         uses: bahmutov/npm-install@v1
-        with:
-          install-command: npm install
 
       - name: Test
         run: |

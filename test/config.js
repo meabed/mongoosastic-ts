@@ -78,7 +78,7 @@ module.exports = {
   mongoUrl: 'mongodb://localhost/es-test',
   mongoOpts: {
     bufferCommands: true,
-    autoIndex: true,
+    autoIndex: true
   },
   INDEXING_TIMEOUT: INDEXING_TIMEOUT,
   BULK_ACTION_TIMEOUT: BULK_ACTION_TIMEOUT,
