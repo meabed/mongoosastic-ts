@@ -2,17 +2,13 @@ import elasticsearch from 'elasticsearch';
 
 const esClient = new elasticsearch.Client({
   host: 'localhost:9200',
-  deadTimeout: 0,
-  keepAlive: false,
 });
 
-export async function deleteIndexIfExists(indexes: any) {
+export async function deleteIndexIfExists(indexes: string[]) {
   for (const index of indexes) {
     try {
       await esClient.indices.delete({ index });
-    } catch (e) {
-      // console.error(e);
-    }
+    } catch (e) {}
   }
 }
 
@@ -48,7 +44,7 @@ export function saveAndWaitIndex(model: any, cb: any) {
   });
 }
 
-export function bookTitlesArray() {
+export function bookTitlesArray(): string[] {
   const books = ['American Gods', 'Gods of the Old World', 'American Gothic'];
   let idx;
   for (idx = 0; idx < 50; idx++) {

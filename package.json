@@ -56,7 +56,7 @@
     "lint-fix": "npm run lint -- --fix",
     "lint": "eslint lib test",
     "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/*.ts'",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha --timeout 5000 -r ts-node/register --file ./test/setup.ts --file ./test/teardown.ts 'test/*.ts'",
     "coverage": "cat ./coverage/lcov.info | coveralls",
     "changelog": "changelog mongoosastic/mongoosastic latest -m"
   },

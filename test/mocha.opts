@@ -1,3 +1,5 @@
+--file ./test/setup.ts
+--file ./test/teardown.ts
 --require should
 --require co-mocha
 --timeout 60000

@@ -1,17 +1,9 @@
-import mongoose from 'mongoose';
-import { config } from './config';
-
 import { tweetModel } from './models/tweet';
 import { createModelAndEnsureIndex, deleteIndexIfExists, sleep } from './helper';
 import { expect } from 'chai';
 
 describe('Index Method', async () => {
   before(async () => {
-    try {
-      await mongoose.connect(config.mongoUrl);
-    } catch (error) {
-      console.log(error);
-    }
     await deleteIndexIfExists(['tweets', 'public_tweets']);
     await tweetModel.deleteMany();
     await createModelAndEnsureIndex(tweetModel, {
@@ -24,7 +16,6 @@ describe('Index Method', async () => {
   after(async () => {
     await tweetModel.deleteMany();
     await deleteIndexIfExists(['tweets', 'public_tweets']);
-    await mongoose.disconnect();
   });
 
   it('should be able to index it directly without saving', async () => {

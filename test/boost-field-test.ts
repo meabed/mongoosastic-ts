@@ -1,25 +1,16 @@
 import { blogModel } from './models/blog';
-import { closeEsClient, deleteIndexIfExists, getEsClient, sleep } from './helper';
-import { config } from './config';
-import mongoose from 'mongoose';
+import { deleteIndexIfExists, getEsClient, sleep } from './helper';
 import { expect } from 'chai';
 
 describe('Add Boost Option Per Field', async () => {
   before(async () => {
-    try {
-      await mongoose.connect(config.mongoUrl);
-    } catch (error) {
-      console.log(error);
-    }
     await blogModel.deleteMany();
-    await deleteIndexIfExists(['blogposts']);
+    await deleteIndexIfExists(['blogs']);
   });
 
   after(async () => {
     await blogModel.deleteMany();
-    await deleteIndexIfExists(['blogposts']);
-    await mongoose.disconnect();
-    await closeEsClient();
+    await deleteIndexIfExists(['blogs']);
   });
 
   it('should create a mapping with boost field added', async () => {
