@@ -1,4 +1,4 @@
-module.exports = function serialize(model: any, mapping: any) {
+export function serialize(this: any, model: any, mapping: any) {
   let name;
 
   function _serializeObject(object: any, mappingData: any) {
@@ -42,4 +42,4 @@ module.exports = function serialize(model: any, mapping: any) {
   }
 
   return outModel;
-};
+}

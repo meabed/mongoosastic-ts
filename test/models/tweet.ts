@@ -1,10 +1,23 @@
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'mongoose'.
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose, { Document, Model } from 'mongoose';
+
 const mongoosastic = require('../../lib/mongoosastic');
 
-// -- simplest indexing... index all fields
-const TweetSchema = new Schema({
+interface MongoosasticModel extends Model<ITweetModel> {
+  search: (params: any, opt?: any) => Promise<any>;
+}
+
+interface MongoosasticDocument {
+  index: (opt?: any) => Promise<any>;
+}
+
+export interface ITweetModel extends Document, MongoosasticDocument {
+  user?: string;
+  userId?: number;
+  post_date?: Date;
+  message?: string;
+}
+
+const TweetSchema = new mongoose.Schema<ITweetModel>({
   user: String,
   userId: Number,
   post_date: Date,
@@ -16,4 +29,4 @@ TweetSchema.plugin(mongoosastic, {
   type: 'tweet',
 });
 
-module.exports = mongoose.model('Tweet', TweetSchema);
+export const tweetModel = mongoose.model<ITweetModel, MongoosasticModel>('Tweet', TweetSchema);

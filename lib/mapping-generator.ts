@@ -1,4 +1,4 @@
-const cloneDeep = require('lodash.clonedeep');
+import cloneDeep from 'lodash.clonedeep';
 
 //
 // Get type from the mongoose schema
@@ -185,7 +185,7 @@ function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
       if (value[0] || type === 'embedded') {
         // A nested array can contain complex objects
         nestedSchema(paths, field, cleanTree, value, prefix); // eslint-disable-line no-use-before-define
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'type' does not exist on type '{}'.
+        // @ts-expect-error ts-migrate(2339) FIXME: Property 'type' does not exist on type '{}'.
       } else if (value.type && Array.isArray(value.type)) {
         // An object with a nested array
         nestedSchema(paths, field, cleanTree, value, prefix); // eslint-disable-line no-use-before-define
@@ -342,19 +342,15 @@ function nestedSchema(paths: any, field: any, cleanTree: any, value: any, prefix
   }
 }
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Generator'... Remove this comment to see the full error message
-function Generator() {}
-
-Generator.prototype.generateMapping = function generateMapping(schema: any) {
-  const cleanTree = getCleanTree(schema.tree, schema.paths, '', true);
-  // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-  delete cleanTree[schema.get('versionKey')];
-  const mapping = getMapping(cleanTree, '');
-  return { properties: mapping };
+export const Generator = {
+  generateMapping: function generateMapping(schema: any) {
+    const cleanTree = getCleanTree(schema.tree, schema.paths, '', true);
+    // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    delete cleanTree[schema.get('versionKey')];
+    const mapping = getMapping(cleanTree, '');
+    return { properties: mapping };
+  },
+  getCleanTree: function (schema: any) {
+    return getCleanTree(schema.tree, schema.paths, '', true);
+  },
 };
-
-Generator.prototype.getCleanTree = function (schema: any) {
-  return getCleanTree(schema.tree, schema.paths, '', true);
-};
-
-module.exports = Generator;

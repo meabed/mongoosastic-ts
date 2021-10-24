@@ -1,7 +1,9 @@
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'mongoose'.
-const mongoose = require('mongoose');
-const config = require('./config');
-const Tweet = require('./models/tweet');
+import mongoose from 'mongoose';
+import { config } from './config';
+
+import { tweetModel } from './models/tweet';
+import { createModelAndEnsureIndex, deleteIndexIfExists, sleep } from './helper';
+import { expect } from 'chai';
 
 describe('Index Method', async () => {
   before(async () => {
@@ -10,78 +12,60 @@ describe('Index Method', async () => {
     } catch (error) {
       console.log(error);
     }
-    await config.deleteIndexIfExists(['tweets', 'public_tweets']);
-    await Tweet.deleteMany();
-    await config.createModelAndEnsureIndex(Tweet, {
+    await deleteIndexIfExists(['tweets', 'public_tweets']);
+    await tweetModel.deleteMany();
+    await createModelAndEnsureIndex(tweetModel, {
       user: 'jamescarr',
       message: 'I know kung-fu!',
       post_date: new Date(),
     });
   });
 
-  after(async (done) => {
-    Tweet.deleteMany();
-    await config.deleteIndexIfExists(['tweets', 'public_tweets']);
+  after(async () => {
+    await tweetModel.deleteMany();
+    await deleteIndexIfExists(['tweets', 'public_tweets']);
     await mongoose.disconnect();
-    done();
   });
 
   it('should be able to index it directly without saving', async () => {
-    const doc = await Tweet.findOne({ message: 'I know kung-fu!' });
+    const doc = await tweetModel.findOne({ message: 'I know kung-fu!' });
     doc.message = 'I know nodejitsu!';
     await doc.index();
+    await sleep(1200);
+    const res = await tweetModel.search({
+      query_string: {
+        query: 'know',
+      },
+    });
+    expect(res.hits.hits[0]._source.message).to.be.eql('I know nodejitsu!');
+  });
 
-    try {
-      await Tweet.search({
+  it('should be able to index to alternative index', async () => {
+    const doc = await tweetModel.findOne({
+      message: 'I know kung-fu!',
+    });
+    doc.message = 'I know taebo!';
+    await doc.index({
+      index: 'public_tweets',
+    });
+    await sleep(1200);
+    const res = await tweetModel.search(
+      {
         query_string: {
           query: 'know',
         },
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    process.exit(1);
-    // res.hits.hits[0]._source.message.should.eql('I know nodejitsu!');
-  });
-
-  it('should be able to index to alternative index', function (done) {
-    Tweet.findOne(
-      {
-        message: 'I know kung-fu!',
       },
-      function (err: any, doc: any) {
-        doc.message = 'I know taebo!';
-        doc.index(
-          {
-            index: 'public_tweets',
-          },
-          function () {
-            setTimeout(function () {
-              Tweet.search(
-                {
-                  query_string: {
-                    query: 'know',
-                  },
-                },
-                {
-                  index: 'public_tweets',
-                },
-                function (err1: any, res: any) {
-                  res.hits.hits[0]._source.message.should.eql('I know taebo!');
-                  done();
-                }
-              );
-            }, config.INDEXING_TIMEOUT);
-          }
-        );
+      {
+        index: 'public_tweets',
       }
     );
+    expect(res.hits.hits[0]._source.message).to.be.eql('I know taebo!');
   });
 
   // This does not work in elastic > 6.x
   // Indices created in 6.x only allow a single-type per index
   /* it('should be able to index to alternative index and type', function (done) {
-    Tweet.findOne({
+    tweetModel.findOne({
       message: 'I know kung-fu!'
     }, function (err, doc) {
       doc.message = 'I know taebo!'
@@ -90,7 +74,7 @@ describe('Index Method', async () => {
         type: 'utterings'
       }, function () {
         setTimeout(function () {
-          Tweet.search({
+          tweetModel.search({
             query_string: {
               query: 'know'
             }

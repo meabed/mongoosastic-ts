@@ -1,10 +1,8 @@
-const elasticsearch = require('elasticsearch');
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'Generator'... Remove this comment to see the full error message
-const Generator = require('./mapping-generator');
-// @ts-expect-error ts-migrate(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-const generator = new Generator();
-const serialize = require('./serialize');
-const events = require('events');
+import elasticsearch, { Client as EsClient } from 'elasticsearch';
+import events from 'events';
+import { Generator } from './mapping-generator';
+import { serialize } from './serialize';
+
 const nop = function nop() {};
 
 function isString(subject: any) {
@@ -69,7 +67,7 @@ function createMappingIfNotPresent(options: any, cb: any) {
 
   const completeMapping = {};
   // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-  completeMapping[typeName] = generator.generateMapping(schema);
+  completeMapping[typeName] = Generator.generateMapping(schema);
 
   // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   completeMapping[typeName].properties = filterMappingFromMixed(completeMapping[typeName].properties);
@@ -128,7 +126,7 @@ function createMappingIfNotPresent(options: any, cb: any) {
   );
 }
 
-function hydrate(res: any, model: any, options: any, cb: any) {
+async function hydrate(res: any, model: any, options: any) {
   const results = res.hits;
   const resultsMap = {};
   const ids = results.hits.map((result: any, idx: any) => {
@@ -150,86 +148,70 @@ function hydrate(res: any, model: any, options: any, cb: any) {
     query[option](hydrateOptions[option]);
   });
 
-  query.exec((err: any, docs: any) => {
-    let hits;
-    const docsMap = {};
+  const docs = await query.exec();
+  let hits;
+  const docsMap = {};
 
-    if (err) {
-      return cb(err);
-    }
-
-    if (!docs || docs.length === 0) {
-      results.hits = [];
-      res.hits = results;
-      return cb(null, res);
-    }
-
-    if (hydrateOptions.sort) {
-      // Hydrate sort has precedence over ES result order
-      hits = docs;
-    } else {
-      // Preserve ES result ordering
-      docs.forEach((doc: any) => {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-        docsMap[doc._id] = doc;
-      });
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      hits = results.hits.map((result: any) => docsMap[result._id]);
-    }
-
-    if (options.highlight || options.hydrateWithESResults) {
-      hits.forEach((doc: any) => {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-        const idx = resultsMap[doc._id];
-        if (options.highlight) {
-          doc._highlight = results.hits[idx].highlight;
-        }
-        if (options.hydrateWithESResults) {
-          // Add to doc ES raw result (with, e.g., _score value)
-          doc._esResult = results.hits[idx];
-          if (!options.hydrateWithESResults.source) {
-            // Remove heavy load
-            delete doc._esResult._source;
-          }
-        }
-      });
-    }
-
-    results.hits = hits;
+  if (!docs || docs.length === 0) {
+    results.hits = [];
     res.hits = results;
-    cb(null, res);
-  });
+    return res;
+  }
+
+  if (hydrateOptions.sort) {
+    // Hydrate sort has precedence over ES result order
+    hits = docs;
+  } else {
+    // Preserve ES result ordering
+    docs.forEach((doc: any) => {
+      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+      docsMap[doc._id] = doc;
+    });
+    // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    hits = results.hits.map((result: any) => docsMap[result._id]);
+  }
+
+  if (options.highlight || options.hydrateWithESResults) {
+    hits.forEach((doc: any) => {
+      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+      const idx = resultsMap[doc._id];
+      if (options.highlight) {
+        doc._highlight = results.hits[idx].highlight;
+      }
+      if (options.hydrateWithESResults) {
+        // Add to doc ES raw result (with, e.g., _score value)
+        doc._esResult = results.hits[idx];
+        if (!options.hydrateWithESResults.source) {
+          // Remove heavy load
+          delete doc._esResult._source;
+        }
+      }
+    });
+  }
+
+  results.hits = hits;
+  res.hits = results;
+  return res;
 }
 
-function deleteByMongoId(options: any, cb: any) {
+async function deleteByMongoId(options: any) {
   const index = options.index;
-  const client = options.client;
+  const client: EsClient = options.client;
   const model = options.model;
   const routing = options.routing;
   let tries = options.tries;
 
-  client.delete(
-    {
-      index: index,
-      id: model._id.toString(),
-      routing: routing,
-    },
-    (err: any, res: any) => {
-      if (err && err.status === 404) {
-        if (tries <= 0) {
-          model.emit('es-removed', err, res);
-          return cb(err);
-        }
-        options.tries = --tries;
-        setTimeout(() => {
-          deleteByMongoId(options, cb);
-        }, 500);
-      } else {
-        model.emit('es-removed', err, res);
-        cb(err);
-      }
-    }
-  );
+  const res = await client.delete({
+    type: '_doc',
+    index: index,
+    id: model._id.toString(),
+    routing: routing,
+  });
+  //         options.tries = --tries;
+  //         setTimeout(async () => {
+  //           await deleteByMongoId(options);
+  //         }, 500);
+  model.emit('es-removed', null, res);
 }
 
 function Mongoosastic(schema: any, pluginOpts: any) {
@@ -237,9 +219,9 @@ function Mongoosastic(schema: any, pluginOpts: any) {
 
   let bulkTimeout: any;
   let bulkBuffer: any = [];
-  let esClient: any;
+  let esClient: EsClient;
   const populate = options && options.populate;
-  const mapping = generator.generateMapping(schema);
+  const mapping = Generator.generateMapping(schema);
 
   let indexName = options && options.index;
   let typeName = options && options.type;
@@ -309,7 +291,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     bulkTimeout = undefined;
   }
 
-  function bulkAdd(instruction: any) {
+  async function bulkAdd(instruction: any) {
     bulkBuffer.push(instruction);
 
     // Return because we need the doc being indexed
@@ -329,18 +311,17 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     }
   }
 
-  function bulkDelete(opts: any, cb: any) {
-    bulkAdd({
+  async function bulkDelete(opts: any) {
+    return bulkAdd({
       delete: {
         _index: opts.index || indexName,
         _id: opts.model._id.toString(),
         routing: opts.routing,
       },
     });
-    cb();
   }
 
-  function bulkIndex(opts: any) {
+  async function bulkIndex(opts: any) {
     bulkAdd({
       index: {
         _index: opts.index || indexName,
@@ -363,7 +344,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
    * @param inSettings
    * @param inCb
    */
-  schema.statics.createMapping = function createMapping(inSettings: any, inCb: any) {
+  schema.statics.createMapping = async function createMapping(inSettings: any, inCb: any) {
     let cb = inCb;
     let settings = inSettings;
     if (arguments.length < 2) {
@@ -390,32 +371,29 @@ function Mongoosastic(schema: any, pluginOpts: any) {
    * Get the mapping.
    */
   schema.statics.getMapping = function getMapping() {
-    return generator.generateMapping(schema);
+    return Generator.generateMapping(schema);
   };
 
   /**
    * Get clean tree.
    */
   schema.statics.getCleanTree = function getCleanTree() {
-    return generator.getCleanTree(schema);
+    return Generator.getCleanTree(schema);
   };
 
   /**
    * @param inOpts
-   * @param inCb
    */
-  schema.methods.index = function schemaIndex(inOpts: any, inCb: any) {
+  schema.methods.index = async function schemaIndex(inOpts: any) {
     let serialModel;
-    let cb = inCb;
     let opts = inOpts;
 
     if (arguments.length < 2) {
-      cb = inOpts || nop;
       opts = {};
     }
 
     if (filter && filter(this)) {
-      return this.unIndex(cb);
+      return this.unIndex();
     }
 
     setIndexNameIfUnset(this.constructor.modelName);
@@ -447,28 +425,25 @@ function Mongoosastic(schema: any, pluginOpts: any) {
       _opts.model = serialModel;
       // @ts-expect-error ts-migrate(2339) FIXME: Property '_id' does not exist on type '{ index: an... Remove this comment to see the full error message
       _opts._id = this._id;
-      bulkIndex(_opts);
-      setImmediate(() => cb(null, this));
+      await bulkIndex(_opts);
+      return this;
     } else {
       // @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type '{ index: any... Remove this comment to see the full error message
       _opts.id = this._id.toString();
       // @ts-expect-error ts-migrate(2339) FIXME: Property 'body' does not exist on type '{ index: a... Remove this comment to see the full error message
       _opts.body = serialModel;
-      esClient.index(_opts, cb);
+      return esClient.index(_opts as any);
     }
   };
 
   /**
    * Unset elasticsearch index
    * @param inOpts
-   * @param inCb
    */
-  schema.methods.unIndex = function unIndex(inOpts: any, inCb: any) {
+  schema.methods.unIndex = async function unIndex(inOpts?: any) {
     let opts = inOpts;
-    let cb = inCb;
 
     if (arguments.length < 2) {
-      cb = inOpts || nop;
       opts = {};
     }
 
@@ -484,9 +459,9 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     }
 
     if (bulk) {
-      bulkDelete(opts, cb);
+      return bulkDelete(opts);
     } else {
-      deleteByMongoId(opts, cb);
+      return deleteByMongoId(opts);
     }
   };
 
@@ -495,7 +470,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
    * @param inOpts
    * @param inCb
    */
-  schema.statics.esTruncate = function esTruncate(inOpts: any, inCb: any) {
+  schema.statics.esTruncate = async function esTruncate(inOpts: any, inCb: any) {
     let opts = inOpts;
     let cb = inCb;
 
@@ -529,7 +504,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
             doc._source._id = doc._id;
             opts.routing = routing(doc._source);
           }
-          bulkDelete(opts, nop);
+          bulkDelete(opts);
         });
       }
       cb();
@@ -542,7 +517,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
    * @param inQuery
    * @param inOpts
    */
-  schema.statics.synchronize = function synchronize(inQuery: any, inOpts: any) {
+  schema.statics.synchronize = async function synchronize(inQuery: any, inOpts: any) {
     const em = new events.EventEmitter();
     let closeValues: any = [];
     let counter = 0;
@@ -624,7 +599,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
    * @param inOpts - (optional) special search options, such as hydrate
    * @param inCb - callback called with search results
    */
-  schema.statics.search = function search(inQuery: any, inOpts: any, inCb: any) {
+  schema.statics.search = async function search(inQuery: any, inOpts: any, inCb: any) {
     let cb = inCb;
     let opts = inOpts;
     const query = inQuery === null ? undefined : inQuery;
@@ -653,10 +628,10 @@ function Mongoosastic(schema: any, pluginOpts: any) {
    * @param inOpts - (optional) special search options, such as hydrate
    * @param inCb - callback called with search results
    */
-  schema.statics.esSearch = function (inQuery: any, inOpts: any, inCb: any) {
+  schema.statics.esSearch = async function (inQuery: any, inOpts: any, inCb: any) {
     const _this = this;
     let cb = inCb;
-    let opts = inOpts;
+    let opts = inOpts ?? {};
     const query = inQuery === null ? undefined : inQuery;
 
     if (arguments.length === 2) {
@@ -664,7 +639,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
       opts = {};
     }
 
-    opts.hydrateOptions = opts.hydrateOptions || defaultHydrateOptions || {};
+    opts.hydrateOptions = opts?.hydrateOptions || defaultHydrateOptions || {};
 
     setIndexNameIfUnset(this.modelName);
 
@@ -710,18 +685,13 @@ function Mongoosastic(schema: any, pluginOpts: any) {
       }
     });
 
-    esClient.search(esQuery, (err: any, res: any) => {
-      if (err) {
-        return cb(err);
-      }
+    const res = await esClient.search(esQuery);
 
-      const resp = reformatESTotalNumber(res);
-      if (alwaysHydrate || opts.hydrate) {
-        hydrate(resp, _this, opts, cb);
-      } else {
-        cb(null, resp);
-      }
-    });
+    const resp = reformatESTotalNumber(res);
+    if (alwaysHydrate || opts.hydrate) {
+      return hydrate(resp, _this, opts);
+    }
+    return resp;
   };
 
   function reformatESTotalNumber(res: any) {
@@ -778,7 +748,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     bulkBuffer = [];
   };
 
-  schema.statics.refresh = function refresh(inOpts: any, inCb: any) {
+  schema.statics.refresh = async function refresh(inOpts: any, inCb: any) {
     let cb = inCb;
     let opts = inOpts;
     if (arguments.length < 2) {
@@ -795,7 +765,7 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     );
   };
 
-  function postRemove(doc: any) {
+  async function postRemove(doc: any) {
     if (!doc) {
       return;
     }
@@ -814,9 +784,9 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     setIndexNameIfUnset(doc.constructor.modelName);
 
     if (bulk) {
-      bulkDelete(opts, nop);
+      await bulkDelete(opts);
     } else {
-      deleteByMongoId(opts, nop);
+      await deleteByMongoId(opts);
     }
   }
 
