@@ -1,14 +1,7 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
 
-const mongoosastic = require('../../lib/mongoosastic');
-
-interface MongoosasticModel extends Model<ITweetModel> {
-  search: (params: any, opt?: any) => Promise<any>;
-}
-
-interface MongoosasticDocument {
-  index: (opt?: any) => Promise<any>;
-}
+import { mongoosastic } from '../../lib/mongoosastic';
 
 export interface ITweetModel extends Document, MongoosasticDocument {
   user?: string;
@@ -29,4 +22,4 @@ TweetSchema.plugin(mongoosastic, {
   type: 'tweet',
 });
 
-export const tweetModel = mongoose.model<ITweetModel, MongoosasticModel>('Tweet', TweetSchema);
+export const tweetModel = mongoose.model<ITweetModel, MongoosasticModel<ITweetModel>>('Tweet', TweetSchema);

@@ -214,7 +214,7 @@ async function deleteByMongoId(options: any) {
   model.emit('es-removed', null, res);
 }
 
-function Mongoosastic(schema: any, pluginOpts: any) {
+export function mongoosastic(schema: any, pluginOpts: any) {
   const options = pluginOpts || {};
 
   let bulkTimeout: any;
@@ -819,5 +819,3 @@ function Mongoosastic(schema: any, pluginOpts: any) {
     setUpMiddlewareHooks(schema);
   }
 }
-
-module.exports = Mongoosastic;

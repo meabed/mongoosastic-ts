@@ -1,4 +1,5 @@
-const elasticsearch = require('elasticsearch');
+import elasticsearch from 'elasticsearch';
+
 const esClient = new elasticsearch.Client({
   host: 'localhost:9200',
   deadTimeout: 0,
@@ -56,12 +57,12 @@ export function bookTitlesArray() {
   return books;
 }
 
-export function getExClient() {
+export function getEsClient() {
   return esClient;
 }
 
-export function CloseEsClient() {
-  esClient.close();
+export async function closeEsClient() {
+  return esClient.close();
 }
 
 export function sleep(time: number) {
