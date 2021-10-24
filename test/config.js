@@ -1,84 +1,94 @@
-'use strict'
+'use strict';
 
-const elasticsearch = require('elasticsearch')
+const elasticsearch = require('elasticsearch');
 const esClient = new elasticsearch.Client({
   host: 'localhost:9200',
   deadTimeout: 0,
-  keepAlive: false
-})
-const async = require('async')
+  keepAlive: false,
+});
+const async = require('async');
 
-const INDEXING_TIMEOUT = process.env.INDEXING_TIMEOUT || 2000
-const BULK_ACTION_TIMEOUT = process.env.BULK_ACTION_TIMEOUT || 4000
+const INDEXING_TIMEOUT = process.env.INDEXING_TIMEOUT || 2000;
+const BULK_ACTION_TIMEOUT = process.env.BULK_ACTION_TIMEOUT || 4000;
 
-function deleteIndexIfExists (indexes, done) {
-  async.forEach(indexes, function (index, cb) {
-    esClient.indices.exists({
-      index: index
-    }, function (err, exists) {
-      if (exists) {
-        esClient.indices.delete({
-          index: index
-        }, cb)
-      } else {
-        cb()
-      }
-    })
-  }, done)
+function deleteIndexIfExists(indexes, done) {
+  async.forEach(
+    indexes,
+    function (index, cb) {
+      esClient.indices.exists(
+        {
+          index: index,
+        },
+        function (err, exists) {
+          if (exists) {
+            esClient.indices.delete(
+              {
+                index: index,
+              },
+              cb
+            );
+          } else {
+            cb();
+          }
+        }
+      );
+    },
+    done
+  );
 }
 
-function deleteDocs (models, done) {
-  async.forEach(models, function (model, cb) {
-    model.deleteMany(cb)
-  }, done)
+function deleteDocs(models, done) {
+  async.forEach(
+    models,
+    function (model, cb) {
+      model.deleteMany(cb);
+    },
+    done
+  );
 }
 
-function createModelAndEnsureIndex (Model, obj, cb) {
-  const dude = new Model(obj)
+function createModelAndEnsureIndex(Model, obj, cb) {
+  const dude = new Model(obj);
   dude.save(function (err) {
-    if (err) return cb(err)
+    if (err) return cb(err);
 
     dude.on('es-indexed', function () {
       setTimeout(function () {
-        cb(null, dude)
-      }, INDEXING_TIMEOUT)
-    })
-  })
+        cb(null, dude);
+      }, INDEXING_TIMEOUT);
+    });
+  });
 }
 
-function createModelAndSave (Model, obj, cb) {
-  const dude = new Model(obj)
-  dude.save(cb)
+function createModelAndSave(Model, obj, cb) {
+  const dude = new Model(obj);
+  dude.save(cb);
 }
 
-function saveAndWaitIndex (model, cb) {
+function saveAndWaitIndex(model, cb) {
   model.save(function (err) {
-    if (err) cb(err)
+    if (err) cb(err);
     else {
-      model.once('es-indexed', cb)
-      model.once('es-filtered', cb)
+      model.once('es-indexed', cb);
+      model.once('es-filtered', cb);
     }
-  })
+  });
 }
 
-function bookTitlesArray () {
-  const books = [
-    'American Gods',
-    'Gods of the Old World',
-    'American Gothic'
-  ]
-  let idx
+function bookTitlesArray() {
+  const books = ['American Gods', 'Gods of the Old World', 'American Gothic'];
+  let idx;
   for (idx = 0; idx < 50; idx++) {
-    books.push('ABABABA' + idx)
+    books.push('ABABABA' + idx);
   }
-  return books
+  return books;
 }
 
 module.exports = {
-  mongoUrl: 'mongodb://localhost/es-test',
+  mongoUrl: 'mongodb://0.0.0.0:27017/es-test',
   mongoOpts: {
     bufferCommands: true,
-    autoIndex: true
+    autoIndex: true,
   },
   INDEXING_TIMEOUT: INDEXING_TIMEOUT,
   BULK_ACTION_TIMEOUT: BULK_ACTION_TIMEOUT,
@@ -89,9 +99,9 @@ module.exports = {
   saveAndWaitIndex: saveAndWaitIndex,
   bookTitlesArray: bookTitlesArray,
   getClient: function () {
-    return esClient
+    return esClient;
   },
   close: function () {
-    esClient.close()
-  }
-}
+    esClient.close();
+  },
+};
