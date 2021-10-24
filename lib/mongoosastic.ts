@@ -8,8 +8,8 @@ import elasticsearch, {
 import events from 'events';
 import { Generator } from './mapping-generator';
 import { serialize } from './serialize';
-import { MongoosasticBulkIndexOpts, MongoosasticOpts, MongoosasticSchema } from './types';
-import { Schema } from 'mongoose';
+import { MongoosasticBulkIndexOpts, MongoosasticModel, MongoosasticOpts, MongoosasticSchema } from './types';
+import { Model, Schema } from 'mongoose';
 
 const nop = function nop() {};
 
@@ -223,8 +223,8 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     }
   }
 
-  function postSave(doc: any) {
-    let _doc: any;
+  async function postSave(doc: Model<any>) {
+    let _doc: MongoosasticModel<any>;
 
     function onIndex(err: any, res: any) {
       if (!filter || !filter(doc)) {
@@ -235,20 +235,19 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     }
 
     if (doc) {
+      // todo check populate and fix constructor typing
+      // @ts-ignore
       _doc = new doc.constructor(doc);
-      if (populate && populate.length) {
-        populate.forEach((populateOpts: any) => {
-          _doc.populate(populateOpts);
-        });
-        _doc
-          .execPopulate()
-          .then((popDoc: any) => {
-            popDoc.index(onIndex);
-          })
-          .catch(onIndex);
-      } else {
-        _doc.index(onIndex);
-      }
+      // if (populate && populate.length) {
+      //   _doc
+      //     .populate(populate)
+      //     .then((popDoc: any) => {
+      //       popDoc.index(onIndex);
+      //     })
+      //     .catch(onIndex);
+      // } else {
+      await _doc.index(onIndex);
+      // }
     }
   }
 

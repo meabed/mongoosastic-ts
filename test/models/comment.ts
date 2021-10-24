@@ -3,7 +3,7 @@ import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../..
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
-export interface IBulkModel extends Document, MongoosasticDocument {
+export interface ICommentModel extends Document, MongoosasticDocument {
   title?: string;
   user?: string;
   userId?: number;
@@ -12,7 +12,7 @@ export interface IBulkModel extends Document, MongoosasticDocument {
   message?: string;
 }
 
-const BulkSchema = new mongoose.Schema<IBulkModel>({
+const CommentSchema = new mongoose.Schema<ICommentModel>({
   title: String,
   user: String,
   random: { type: Number, es_type: 'keyword', es_boost: 2.0 },
@@ -21,13 +21,13 @@ const BulkSchema = new mongoose.Schema<IBulkModel>({
   message: String,
 });
 
-BulkSchema.plugin(mongoosastic, {
-  index: 'bulks',
-  type: 'bulk',
+CommentSchema.plugin(mongoosastic, {
+  index: 'comments',
+  type: 'comment',
   bulk: {
     size: 2,
     delay: 100,
   },
 } as MongoosasticOpts);
 
-export const bulkModel = mongoose.model<IBulkModel, MongoosasticModel<IBulkModel>>('Bulk', BulkSchema);
+export const commentModel = mongoose.model<ICommentModel, MongoosasticModel<ICommentModel>>('Comment', CommentSchema);

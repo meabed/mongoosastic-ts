@@ -5,6 +5,8 @@ export interface MongoosasticModel<T> extends Model<T> {
   search: (params: any, opt?: any) => Promise<any>;
   createMapping: (opt?: any) => Promise<any>;
   esTruncate: (opt?: any) => Promise<any>;
+  esCount: (opt?: any) => Promise<any>;
+  index: (opt?: any) => Promise<any>;
   flush: (opt?: any) => Promise<any>;
   esClient: Client;
 }
@@ -41,11 +43,11 @@ export interface MongoosasticOpts {
   bulk: {
     batch: number; // preferred number of docs to bulk index
     size: number; // preferred number of docs to bulk index
-    delay: number; //milliseconds to wait for enough docs to meet size constraint
+    delay: number; // milliseconds to wait for enough docs to meet size constraint
   };
   hydrateOptions: any;
   hydrate?: boolean;
-  populate: any;
+  populate: string[];
   index?: string;
   type: string;
 }
