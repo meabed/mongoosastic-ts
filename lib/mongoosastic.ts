@@ -1,10 +1,4 @@
-import elasticsearch, {
-  Client,
-  Client as EsClient,
-  ConfigOptions,
-  IndexDocumentParams,
-  SearchParams,
-} from 'elasticsearch';
+import elasticsearch, { Client as EsClient, ConfigOptions, IndexDocumentParams, SearchParams } from 'elasticsearch';
 import events from 'events';
 import { Generator } from './mapping-generator';
 import { serialize } from './serialize';
@@ -59,30 +53,30 @@ function filterMappingFromMixed(props: any) {
 }
 
 async function createMappingIfNotPresent(options: {
-  client: Client;
+  client: EsClient;
   indexName: string;
   typeName: string;
   schema: Schema<any>;
   settings: any;
+  mappings?: any;
   properties: any;
 }) {
-  const client = options.client;
-  const indexName = options.indexName;
-  const typeName = options.typeName;
-  const schema = options.schema;
-  const settings = options.settings;
-  const properties = options.properties;
+  const { client, indexName, typeName, schema, properties, mappings, settings } = options;
 
   const completeMapping: Record<string, any> = {};
-  completeMapping[typeName] = Generator.generateMapping(schema);
 
-  completeMapping[typeName].properties = filterMappingFromMixed(completeMapping[typeName].properties);
-
-  if (properties) {
-    Object.keys(properties).map((key) => {
-      completeMapping[typeName].properties[key] = properties[key];
-    });
+  if (!mappings) {
+    completeMapping[typeName] = Generator.generateMapping(schema);
+    completeMapping[typeName].properties = filterMappingFromMixed(completeMapping[typeName].properties);
+    if (properties) {
+      Object.keys(properties).map((key) => {
+        completeMapping[typeName].properties[key] = properties[key];
+      });
+    }
+  } else {
+    completeMapping[typeName] = mappings;
   }
+  console.log({ mappings });
 
   const inputMapping = completeMapping[typeName];
 
@@ -181,10 +175,13 @@ async function deleteByMongoId(options: any) {
     id: model._id.toString(),
     routing: routing,
   });
+  // todo check retried or implement it natively in the client
+  //
   //         options.tries = --tries;
   //         setTimeout(async () => {
   //           await deleteByMongoId(options);
   //         }, 500);
+  // todo check this events and test them
   model.emit('es-removed', null, res);
 }
 
@@ -305,18 +302,17 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
   /**
    * Create the mapping. Takes an optional settings parameter
    * and a callback that will be called once the mapping is created
-
-   * @param inSettings
    */
-  schema.statics.createMapping = async function createMapping(inSettings: any) {
+  schema.statics.createMapping = async function createMapping(inSettings: any, inMappings?: any) {
     setIndexNameIfUnset(this.modelName);
 
-    await createMappingIfNotPresent({
+    return await createMappingIfNotPresent({
       client: esClient,
       indexName: indexName,
       typeName: typeName,
       schema: schema,
       settings: inSettings,
+      mappings: inMappings,
       properties: customProperties,
     });
   };
@@ -432,13 +428,16 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     opts.index = opts.index || indexName;
 
     const settingsRes = await esClient.indices.getSettings(opts);
-    const mappingsRes = await esClient.indices.getMapping(opts);
 
     const indexSettings = settingsRes?.[indexName].settings || {};
     delete indexSettings?.index?.creation_date;
     delete indexSettings?.index?.provided_name;
     delete indexSettings?.index?.uuid;
     delete indexSettings?.index?.version;
+
+    // pass this to override the mapping from default // todo
+    // const mappingsRes = await esClient.indices.getMapping(opts);
+    // const indexMappings = mappingsRes?.[indexName].mappings || {};
 
     try {
       await esClient.indices.delete(opts);

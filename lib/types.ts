@@ -3,7 +3,7 @@ import { Client, IndexDocumentParams } from 'elasticsearch';
 
 export interface MongoosasticModel<T> extends Model<T> {
   search: (params: any, opt?: any) => Promise<any>;
-  createMapping: (opt?: any) => Promise<any>;
+  createMapping: (settings?: any, mappings?: any) => Promise<any>;
   esTruncate: (opt?: any) => Promise<any>;
   esCount: (opt?: any) => Promise<any>;
   index: (opt?: any) => Promise<any>;
