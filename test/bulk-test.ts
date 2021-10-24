@@ -29,4 +29,13 @@ describe('Bulk mode', async () => {
 
     expect(res?.hits?.total).to.be.eql(53);
   });
+
+  it('should be able to truncate all documents', async () => {
+    await bulkModel.esTruncate();
+    await sleep(200);
+    const res = await bulkModel.search({
+      match_all: {},
+    });
+    expect(res.hits.total).to.be.eql(0);
+  });
 });

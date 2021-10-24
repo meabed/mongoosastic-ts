@@ -301,18 +301,18 @@ export function mongoosastic(schema: any, pluginOpts: any) {
     }
 
     if (bulkBuffer.length >= ((bulk && bulk.size) || 1000)) {
-      schema.statics.flush();
+      await schema.statics.flush();
       clearBulkTimeout();
     } else if (bulkTimeout === undefined) {
-      bulkTimeout = setTimeout(() => {
-        schema.statics.flush();
+      bulkTimeout = setTimeout(async () => {
+        await schema.statics.flush();
         clearBulkTimeout();
       }, (bulk && bulk.delay) || 1000);
     }
   }
 
   async function bulkDelete(opts: any) {
-    return bulkAdd({
+    return await bulkAdd({
       delete: {
         _index: opts.index || indexName,
         _id: opts.model._id.toString(),
@@ -322,14 +322,14 @@ export function mongoosastic(schema: any, pluginOpts: any) {
   }
 
   async function bulkIndex(opts: any) {
-    bulkAdd({
+    await bulkAdd({
       index: {
         _index: opts.index || indexName,
         _id: opts._id.toString(),
         routing: opts.routing,
       },
     });
-    bulkAdd(opts.model);
+    await bulkAdd(opts.model);
   }
 
   /**
@@ -468,19 +468,18 @@ export function mongoosastic(schema: any, pluginOpts: any) {
   /**
    * Delete all documents from a type/index
    * @param inOpts
-   * @param inCb
    */
-  schema.statics.esTruncate = async function esTruncate(inOpts: any, inCb: any) {
+  schema.statics.esTruncate = async function esTruncate(inOpts: any) {
     let opts = inOpts;
-    let cb = inCb;
 
     if (arguments.length < 2) {
-      cb = inOpts || nop;
       opts = {};
     }
 
     setIndexNameIfUnset(this.modelName);
 
+    // todo fix pagination and only get ids
+    // or recreate index better?
     opts.index = opts.index || indexName;
 
     const esQuery = {
@@ -492,23 +491,20 @@ export function mongoosastic(schema: any, pluginOpts: any) {
       index: opts.index,
     };
 
-    esClient.search(esQuery, (err: any, res: any) => {
-      if (err) {
-        return cb(err);
+    const res = reformatESTotalNumber(await esClient.search(esQuery));
+    let i = 0;
+    if (res.hits.total) {
+      for (const doc of res.hits.hits) {
+        console.log({ tot: res.hits.total, i });
+        i++;
+        opts.model = doc;
+        if (routing) {
+          (doc._source as any)._id = doc._id;
+          opts.routing = routing(doc._source);
+        }
+        await bulkDelete(opts);
       }
-      res = reformatESTotalNumber(res);
-      if (res.hits.total) {
-        res.hits.hits.forEach((doc: any) => {
-          opts.model = doc;
-          if (routing) {
-            doc._source._id = doc._id;
-            opts.routing = routing(doc._source);
-          }
-          bulkDelete(opts);
-        });
-      }
-      cb();
-    });
+    }
   };
 
   /**
@@ -725,26 +721,19 @@ export function mongoosastic(schema: any, pluginOpts: any) {
     esClient.count(esQuery, cb);
   };
 
-  schema.statics.flush = function flush(inCb: any) {
-    const cb = inCb || nop;
-    esClient.bulk(
-      {
-        body: bulkBuffer,
-      },
-      (err: any, res: any) => {
-        if (err) bulkErrEm.emit('error', err, res);
-        if (res.items && res.items.length) {
-          for (let i = 0; i < res.items.length; i++) {
-            const info = res.items[i];
-            if (info && info.index && info.index.error) {
-              bulkErrEm.emit('error', null, info.index);
-            }
-          }
+  schema.statics.flush = async function flush() {
+    const res = await esClient.bulk({
+      body: bulkBuffer,
+    });
+    if (res.errors) bulkErrEm.emit('error', res.errors, res);
+    if (res.items && res.items.length) {
+      for (let i = 0; i < res.items.length; i++) {
+        const info = res.items[i];
+        if (info && info.index && info.index.error) {
+          bulkErrEm.emit('error', null, info.index);
         }
-        cb();
       }
-    );
-
+    }
     bulkBuffer = [];
   };
 
