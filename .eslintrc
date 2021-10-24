@@ -5,6 +5,11 @@
   },
   "extends": "standard",
   "rules": {
-    "no-prototype-builtins": 0
+    "no-prototype-builtins": 0,
+    "handle-callback-err": "off",
+    "node/handle-callback-err": "off",
+    "no-var": "off",
+    "array-callback-return": "off",
+    "multiline-ternary": "off"
   }
 }
