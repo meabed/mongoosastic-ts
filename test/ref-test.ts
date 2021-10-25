@@ -36,7 +36,6 @@ describe('references', async () => {
         index: 'posts',
         id: post._id.toString(),
       });
-      console.log({ x: res._source });
       res._source.author.name.should.eql('jake');
     });
 
