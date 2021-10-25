@@ -3,7 +3,7 @@ import events from 'events';
 import { Generator } from './mapping-generator';
 import { serialize } from './serialize';
 import { MongoosasticBulkIndexOpts, MongoosasticModel, MongoosasticOpts, MongoosasticSchema } from './types';
-import { Model, Schema } from 'mongoose';
+import { Model, Query, Schema } from 'mongoose';
 
 const nop = function nop() {};
 
@@ -224,7 +224,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
   }
 
   async function postSave(doc: Model<any>) {
-    let _doc: MongoosasticModel<any>;
+    let _doc: MongoosasticModel<any> & Query<any, any>;
 
     function onIndex(err: any, res: any) {
       if (!filter || !filter(doc)) {
@@ -238,22 +238,26 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       // todo check populate and fix constructor typing
       // @ts-ignore
       _doc = new doc.constructor(doc);
-      // if (populate && populate.length) {
-      //   _doc
-      //     .populate(populate)
-      //     .then((popDoc: any) => {
-      //       popDoc.index(onIndex);
-      //     })
-      //     .catch(onIndex);
-      // } else {
-      return _doc
-        .index()
-        .then((res) => {
-          onIndex(undefined, res);
-        })
-        .catch((e) => {
-          onIndex(e, undefined);
-        });
+      if (populate && populate.length) {
+        const popDoc = await _doc.populate(populate);
+        popDoc
+          .index()
+          .then((res: any) => {
+            onIndex(undefined, res);
+          })
+          .catch((e: any) => {
+            onIndex(e, undefined);
+          });
+      } else {
+        return _doc
+          .index()
+          .then((res) => {
+            onIndex(undefined, res);
+          })
+          .catch((e) => {
+            onIndex(e, undefined);
+          });
+      }
     }
   }
 
