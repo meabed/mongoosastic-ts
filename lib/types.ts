@@ -27,6 +27,7 @@ export interface IMongoosasticSearchOpts {
   index?: string;
   routing?: string;
   hydrate?: boolean;
+  hydrateWithESResults?: { source?: boolean };
   hydrateOptions?: { lean?: boolean; sort?: string; select?: string };
 }
 
