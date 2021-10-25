@@ -1,4 +1,4 @@
-import { Model, Schema } from 'mongoose';
+import mongoose, { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
 import { Client, IndexDocumentParams } from 'elasticsearch';
 
 export interface MongoosasticModel<T> extends Model<T> {
@@ -13,6 +13,7 @@ export interface MongoosasticModel<T> extends Model<T> {
 
 export interface MongoosasticDocument {
   index: (opt?: any) => Promise<any>;
+  unIndex: (opt?: any) => Promise<any>;
 }
 
 export interface MongoosasticBulkIndexOpts extends Partial<IndexDocumentParams<any>> {
@@ -24,7 +25,7 @@ export interface MongoosasticSchema<T> extends Schema<T> {
   statics: MongoosasticModel<any> & Schema<T>['statics'];
 }
 
-export interface MongoosasticOpts {
+export interface MongoosasticOpts<T = any> {
   log?: string;
   auth?: string;
   protocol?: string;
@@ -37,8 +38,8 @@ export interface MongoosasticOpts {
   forceIndexRefresh?: boolean;
   customSerialize?: (doc?: any, mapping?: any) => any;
   customProperties?: any;
-  routing?: any;
-  transform: (doc: any, row: any) => any;
+  routing?: (model: LeanDocument<T>) => any;
+  transform: (json: LeanDocument<T> & Record<string | number, any>, model: Document<Types.ObjectId, any, T>) => any;
   filter: (doc: any) => any;
   bulk: {
     batch: number; // preferred number of docs to bulk index
