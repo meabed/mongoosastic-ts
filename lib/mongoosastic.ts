@@ -445,7 +445,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
   /**
    * Synchronize an existing collection
    */
-  schema.statics.synchronize = async function synchronize(inQuery: any, inOpts: any) {
+  schema.statics.synchronize = function synchronize(inQuery: any, inOpts: any) {
     const em = new events.EventEmitter();
     let closeValues: any = [];
     let counter = 0;
@@ -496,7 +496,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
           }
         });
       } else {
-        postSave(doc);
+        postSave(doc).then();
       }
     });
 

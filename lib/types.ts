@@ -1,5 +1,6 @@
 import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
-import { Client, IndexDocumentParams, NameList } from 'elasticsearch';
+import { Client, IndexDocumentParams } from 'elasticsearch';
+import { EventEmitter } from 'events';
 
 export type MongoosasticNestedOpts = Record<
   string,
@@ -7,6 +8,7 @@ export type MongoosasticNestedOpts = Record<
 >;
 
 export interface IMongoosasticSearchParam {
+  bool?: Record<string, any>;
   query_string?: Record<string, any>;
   match_all?: Record<string, any>;
   match?: Record<string, any>;
@@ -29,6 +31,7 @@ export interface IMongoosasticSearchOpts {
 export interface MongoosasticModel<T> extends Model<T> {
   search: (params: IMongoosasticSearchParam, opt?: IMongoosasticSearchOpts) => Promise<any>;
   createMapping: (settings?: any, mappings?: any) => Promise<any>;
+  synchronize: (params?: any, opt?: any) => EventEmitter;
   esTruncate: (opt?: MongoosasticNestedOpts) => Promise<any>;
   esCount: (opt?: MongoosasticNestedOpts) => Promise<any>;
   index: (opt?: MongoosasticNestedOpts) => Promise<any>;
