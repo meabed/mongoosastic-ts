@@ -90,7 +90,7 @@ describe('GeoTest', async function () {
       count++;
     });
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       stream.on('close', async function () {
         count.should.eql(2);
         await sleep(4000);

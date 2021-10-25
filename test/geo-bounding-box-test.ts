@@ -66,7 +66,7 @@ describe('Geo Bounding Box Test', async function () {
       count++;
     });
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       stream.on('close', async function () {
         count.should.eql(3);
         const res = await geoBoundModel.search({
