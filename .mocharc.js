@@ -7,8 +7,8 @@
 
 module.exports = {
   'allow-uncaught': false,
-  'async-only': false,
-  bail: false,
+  'async-only': true,
+  bail: true,
   'check-leaks': false,
   color: true,
   delay: false,
@@ -17,7 +17,7 @@ module.exports = {
   extension: ['js', 'cjs', 'mjs', 'ts'],
   file: ['./test/setup.ts', './test/teardown.ts'],
   'inline-diffs': false,
-  jobs: 1,
+  jobs: 2,
   'node-option': ['unhandled-rejections=strict'],
   package: './package.json',
   parallel: false,
@@ -25,8 +25,6 @@ module.exports = {
   reporter: 'spec',
   require: ['should', 'co-mocha'],
   retries: 1,
-  slow: '75',
-  sort: false,
   spec: ['./test/*.ts'],
   timeout: '5s',
   'trace-warnings': true,
