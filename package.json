@@ -1,50 +1,64 @@
 {
-  "author": "Mohamed Meabed <mo.meabed@gmail.com> (https://meabed.com)",
   "name": "mongoosastic-ts",
-  "description": "A mongoose plugin that indexes models into elastic search",
   "version": "5.0.0",
+  "description": "A mongoose plugin that indexes models into elastic search",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/meabed/mongoosastic-ts"
+  },
+  "license": "MIT",
+  "author": "Mohamed Meabed <mo.meabed@gmail.com> (https://meabed.com)",
+  "main": "lib/mongoosastic.ts",
+  "scripts": {
+    "authors": "./scripts/update_authors.sh",
+    "changelog": "changelog mongoosastic/mongoosastic latest -m",
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint lib test",
+    "lint-fix": "npm run lint -- --fix",
+    "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
+    "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha",
+    "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
+  },
+  "dependencies": {
+    "elasticsearch": "16.7.2",
+    "lodash.clonedeep": "4.5.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/elasticsearch": "5.0.38",
+    "@types/eslint": "7.28.2",
+    "@types/expect": "^24.3.0",
+    "@types/lodash.clonedeep": "4.5.6",
+    "@types/mocha": "^9.0.0",
+    "@types/prettier": "^2.4.1",
+    "@types/should": "^13.0.0",
+    "chai": "^4.3.4",
+    "changelog": "^1.0.5",
+    "co-mocha": "1.2.2",
+    "coveralls": "3.1.1",
+    "eslint": "7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-promise": "5.1.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.4",
+    "mocha": "^9.1.3",
+    "mongoose": "6.0.12",
+    "nyc": "^15.1.0",
+    "prettier": "^2.4.1",
+    "pretty-quick": "^3.1.1",
+    "should": "13.2.3",
+    "standard": "16.0.4",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "engines": {
+    "node": ">= 8.0"
+  },
   "tags": [
     "mongodb",
     "elasticsearch",
     "elastic search",
     "mongoose",
     "full text search"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/meabed/mongoosastic-ts"
-  },
-  "main": "lib/mongoosastic.js",
-  "dependencies": {
-    "elasticsearch": "16.7.2",
-    "lodash.clonedeep": "4.5.0"
-  },
-  "devDependencies": {
-    "async": "3.2.1",
-    "changelog": "1.4.2",
-    "co-mocha": "1.2.2",
-    "coveralls": "3.1.1",
-    "eslint": "7.32.0",
-    "eslint-plugin-promise": "5.1.1",
-    "eslint-plugin-standard": "4.1.0",
-    "istanbul": "0.4.5",
-    "mocha": "9.1.3",
-    "mongoose": "6.0.12",
-    "nyc": "^15.1.0",
-    "should": "13.2.3",
-    "standard": "16.0.4"
-  },
-  "engines": {
-    "node": ">= 8.0"
-  },
-  "scripts": {
-    "authors": "./scripts/update_authors.sh",
-    "lint-fix": "npm run lint -- --fix",
-    "lint": "eslint lib test",
-    "mocha": "istanbul cover _mocha --report lcovonly -- test/*-test.js",
-    "test": "npm run lint && npm run mocha",
-    "coverage": "cat ./coverage/lcov.info | coveralls",
-    "changelog": "changelog mongoosastic/mongoosastic latest -m"
-  },
-  "license": "MIT"
+  ]
 }
