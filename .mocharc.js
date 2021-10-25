@@ -23,7 +23,7 @@ module.exports = {
   parallel: false,
   recursive: false,
   reporter: 'spec',
-  require: ['should', 'co-mocha'],
+  require: ['ts-node/register', 'should', 'co-mocha'],
   spec: ['./test/*.ts'],
   timeout: '5s',
   'trace-warnings': true,

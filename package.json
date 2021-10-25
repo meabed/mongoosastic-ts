@@ -16,7 +16,7 @@
     "lint": "eslint lib test",
     "lint-fix": "npm run lint -- --fix",
     "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register"
+    "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
   },
   "dependencies": {
     "elasticsearch": "16.7.2",
