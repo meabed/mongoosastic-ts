@@ -1,3 +1,10 @@
+5.0.0 2021-10-25
+==========
+ * Update all dependencies
+ * Migrate the lib to typescript
+ * Migrate tests to typescript
+ * Github CI integration
+
 4.5.0 2019-06-15
 ==========
 
