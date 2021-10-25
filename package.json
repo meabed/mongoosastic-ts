@@ -24,7 +24,6 @@
     "lodash.clonedeep": "4.5.0"
   },
   "devDependencies": {
-    "eslint-config-standard": "^16.0.3",
     "@types/chai": "^4.2.22",
     "@types/elasticsearch": "5.0.38",
     "@types/eslint": "7.28.2",
@@ -32,11 +31,13 @@
     "@types/lodash.clonedeep": "4.5.6",
     "@types/mocha": "^9.0.0",
     "@types/prettier": "^2.4.1",
+    "@types/should": "^13.0.0",
     "chai": "^4.3.4",
-    "changelog": "1.4.2",
+    "changelog": "^1.0.5",
     "co-mocha": "1.2.2",
     "coveralls": "3.1.1",
     "eslint": "7.32.0",
+    "eslint-config-standard": "^16.0.3",
     "eslint-plugin-promise": "5.1.1",
     "husky": "^7.0.4",
     "lint-staged": "^11.2.4",

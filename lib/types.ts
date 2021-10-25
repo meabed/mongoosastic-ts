@@ -9,6 +9,7 @@ export type MongoosasticNestedOpts = Record<
 
 export interface IMongoosasticSearchParam {
   bool?: Record<string, any>;
+  match_phrase?: Record<string, any>;
   query_string?: Record<string, any>;
   match_all?: Record<string, any>;
   match?: Record<string, any>;
@@ -21,7 +22,7 @@ export interface IMongoosasticSearchOpts {
   sort?: any;
   min_score?: number;
   aggs?: any;
-  highlight?: boolean;
+  highlight?: any;
   index?: string;
   routing?: string;
   hydrate?: boolean;

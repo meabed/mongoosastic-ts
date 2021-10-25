@@ -1,6 +1,6 @@
-import elasticsearch from 'elasticsearch';
+import { Client } from 'elasticsearch';
 
-const esClient = new elasticsearch.Client({
+const esClient = new Client({
   host: 'localhost:9200',
 });
 
