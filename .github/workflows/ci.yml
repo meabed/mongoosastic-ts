@@ -21,6 +21,9 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     timeout-minutes: 20
+    strategy:
+      matrix:
+        node-version: [ 14.x, 17.x ]
 
     services:
 
