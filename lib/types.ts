@@ -8,6 +8,7 @@ export interface MongoosasticModel<T> extends Model<T> {
   esCount: (opt?: any) => Promise<any>;
   index: (opt?: any) => Promise<any>;
   flush: (opt?: any) => Promise<any>;
+  refresh: (opt?: any) => Promise<any>;
   esClient: Client;
 }
 
