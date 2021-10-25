@@ -168,21 +168,24 @@ async function deleteByMongoId(options: any) {
   const routing = options.routing;
   let tries = options.tries;
 
-  const res = await client.delete({
-    maxRetries: tries,
-    type: '_doc',
-    index: index,
-    id: model._id.toString(),
-    routing: routing,
-  });
-
-  if (res.result === 'deleted') {
-    model.emit('es-removed', null, res);
-  } else {
-    model.emit('es-removed', res, res);
-  }
-
-  return res;
+  return client
+    .delete({
+      maxRetries: tries,
+      type: '_doc',
+      index: index,
+      id: model._id.toString(),
+      routing: routing,
+    })
+    .then((res) => {
+      if (res.result === 'deleted') {
+        model.emit('es-removed', undefined, res);
+      } else {
+        model.emit('es-removed', res, res);
+      }
+    })
+    .catch((e) => {
+      model.emit('es-removed', e, undefined);
+    });
 }
 
 export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: MongoosasticOpts) {
@@ -243,12 +246,14 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       //     })
       //     .catch(onIndex);
       // } else {
-      try {
-        const res = await _doc.index();
-        onIndex(null, res);
-      } catch (e) {
-        onIndex(e, null);
-      }
+      return _doc
+        .index()
+        .then((res) => {
+          onIndex(undefined, res);
+        })
+        .catch((e) => {
+          onIndex(e, undefined);
+        });
     }
   }
 
@@ -465,7 +470,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
         if (indexErr) {
           em.emit('error', indexErr);
         } else {
-          em.emit('data', null, inDoc);
+          em.emit('data', undefined, inDoc);
         }
         stream.resume();
       }
@@ -619,7 +624,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       for (let i = 0; i < res.items.length; i++) {
         const info = res.items[i];
         if (info && info.index && info.index.error) {
-          bulkErrEm.emit('error', null, info.index);
+          bulkErrEm.emit('error', undefined, info.index);
         }
       }
     }
