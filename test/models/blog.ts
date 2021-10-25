@@ -6,6 +6,7 @@ import { mongoosastic } from '../../lib/mongoosastic';
 export interface IBlogModel extends Document, MongoosasticDocument {
   title?: string;
   user?: string;
+  rank?: number;
   userId?: number;
   post_date?: Date;
   message?: string;
@@ -17,6 +18,7 @@ const BlogSchema = new Schema<IBlogModel>({
     es_boost: 2.0,
   },
   user: String,
+  rank: Number,
   userId: String,
   post_date: {
     type: Date,
