@@ -15,6 +15,7 @@ on:
 env:
   GH_PAT: ${{ secrets.GH_PAT }}
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  TS_NODE_TRANSPILE_ONLY: 0
 
 jobs:
   build:
