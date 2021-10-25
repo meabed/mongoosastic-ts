@@ -133,7 +133,7 @@ describe('GeoTest', async function () {
       },
     };
 
-    // //
+    // // //
     const res1 = await geoModel.search(geoQuery);
     res1.hits.total.should.eql(1);
     res1.hits.hits[0]._source.myId.should.eql(2);
