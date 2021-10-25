@@ -1,4 +1,4 @@
-import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
+import { LeanDocument, Document, Model, Schema, Types } from 'mongoose';
 import { Client, IndexDocumentParams } from 'elasticsearch';
 
 export interface MongoosasticModel<T> extends Model<T> {
@@ -39,8 +39,11 @@ export interface MongoosasticOpts<T = any> {
   forceIndexRefresh?: boolean;
   customSerialize?: (doc?: any, mapping?: any) => any;
   customProperties?: any;
-  routing?: (model: LeanDocument<T>) => any;
-  transform: (json: LeanDocument<T> & Record<string | number, any>, model: Document<Types.ObjectId, any, T>) => any;
+  routing?: (document: LeanDocument<T>) => any;
+  transform: (
+    json: LeanDocument<T> & Record<string | number, any>,
+    document: Document<Types.ObjectId, any, T> & Omit<LeanDocument<T>, '_id'>
+  ) => any;
   filter: (doc: any) => any;
   bulk: {
     batch: number; // preferred number of docs to bulk index
