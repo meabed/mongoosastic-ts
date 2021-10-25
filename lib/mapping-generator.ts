@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash.clonedeep';
-
 //
 // Get type from the mongoose schema
 //
@@ -9,7 +8,7 @@ import cloneDeep from 'lodash.clonedeep';
 // @param field
 // @return the type or false
 //
-function getTypeFromPaths(paths: any, field: any) {
+function getTypeFromPaths(paths: Record<string, any>, field: string) {
   let type = false;
 
   if (paths[field] && paths[field].options.type === Date) {
@@ -36,28 +35,32 @@ function getTypeFromPaths(paths: any, field: any) {
 // @param inPrefix
 // @return the mapping
 //
-function getMapping(cleanTree: any, inPrefix: any) {
-  const mapping = {};
-  let value = [];
-  let field = [];
-  let prop = [];
+type ICleanTreeValue =
+  | {
+      options: any;
+      getters: any;
+      ref?: string;
+      es_schema?: any;
+      type?: string;
+      es_type?: string;
+      es_indexed?: boolean;
+    }
+  | any;
+
+function getMapping(cleanTree: any, inPrefix: string) {
+  const mapping: Record<string, { properties?: any; type?: string }> = {};
   const implicitFields = [];
   let hasEsIndex = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
 
-  // @ts-expect-error ts-migrate(2405) FIXME: The left-hand side of a 'for...in' statement must ... Remove this comment to see the full error message
-  for (field in cleanTree) {
+  for (const field in cleanTree) {
     if (!cleanTree.hasOwnProperty(field)) {
       continue;
     }
-    // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
-    value = cleanTree[field];
-    // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
+    const value = cleanTree[field];
     mapping[field] = {};
-    // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
     mapping[field].type = value.type;
-
-    // Check if field was explicity indexed, if not keep track implicitly
+    // Check if field was explicit indexed, if not keep track implicitly
     if (value.es_indexed) {
       hasEsIndex = true;
     } else if (value.type) {
@@ -66,38 +69,30 @@ function getMapping(cleanTree: any, inPrefix: any) {
 
     // If there is no type, then it's an object with subfields.
     if (typeof value === 'object' && !value.type) {
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       mapping[field].type = 'object';
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       mapping[field].properties = getMapping(value, prefix + field);
     }
 
     // If it is a objectid make it a string.
     if (value.type === 'objectid') {
       if (value.ref && value.es_schema) {
-        // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
         mapping[field].type = 'object';
-        // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
         mapping[field].properties = getMapping(value, prefix + field);
         continue;
       }
       // do not continue here so we can handle other es_ options
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       mapping[field].type = 'string';
     }
 
     // If indexing a number, and no es_type specified, default to long
     if (value.type === 'number' && value.es_type === undefined) {
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       mapping[field].type = 'long';
       continue;
     }
 
     // Else, it has a type and we want to map that!
-    // @ts-expect-error ts-migrate(2405) FIXME: The left-hand side of a 'for...in' statement must ... Remove this comment to see the full error message
-    for (prop in value) {
+    for (const prop in value) {
       // Map to field if it's an Elasticsearch option
-      // @ts-expect-error ts-migrate(2367) FIXME: This condition will always return 'true' since the... Remove this comment to see the full error message
       if (value.hasOwnProperty(prop) && prop.indexOf('es_') === 0 && prop !== 'es_indexed') {
         // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
         mapping[field][prop.replace(/^es_/, '')] = value[prop];
@@ -105,14 +100,11 @@ function getMapping(cleanTree: any, inPrefix: any) {
     }
 
     // if type is never mapped, delete mapping
-    // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
     if (mapping[field].type === undefined) {
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       delete mapping[field];
     }
 
     // Set default string type
-    // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
     if (mapping[field] && mapping[field].type === 'string') {
       const textType = {
         type: 'text',
@@ -123,7 +115,6 @@ function getMapping(cleanTree: any, inPrefix: any) {
           },
         },
       };
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       mapping[field] = Object.assign(mapping[field], textType);
     }
   }
@@ -131,7 +122,6 @@ function getMapping(cleanTree: any, inPrefix: any) {
   // If one of the fields was explicitly indexed, delete all implicit fields
   if (hasEsIndex) {
     implicitFields.forEach((implicitField) => {
-      // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
       delete mapping[implicitField];
     });
   }
@@ -149,31 +139,22 @@ function getMapping(cleanTree: any, inPrefix: any) {
 // @param prefix
 // @return the tree
 //
-function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
+function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
   const cleanTree = {};
-  let type = '';
-  let value = {};
-  let field;
-  let prop;
-  let treeNode;
-  let subTree;
-  let key;
   let geoFound = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
 
-  tree = cloneDeep(tree);
+  const tree: any = cloneDeep(treeParam);
   paths = cloneDeep(paths);
 
-  for (field in tree) {
+  for (const field in tree) {
     if (prefix === '' && field === '_id' && isRoot) {
       continue;
     }
 
-    // @ts-expect-error ts-migrate(2322) FIXME: Type 'string | boolean' is not assignable to type ... Remove this comment to see the full error message
-    type = getTypeFromPaths(paths, prefix + field);
-    value = tree[field];
+    const type = getTypeFromPaths(paths, prefix + field);
+    const value = tree[field];
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'es_indexed' does not exist on type '{}'.
     if (value.es_indexed === false) {
       continue;
     }
@@ -185,12 +166,11 @@ function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
       if (value[0] || type === 'embedded') {
         // A nested array can contain complex objects
         nestedSchema(paths, field, cleanTree, value, prefix); // eslint-disable-line no-use-before-define
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'type' does not exist on type '{}'.
       } else if (value.type && Array.isArray(value.type)) {
         // An object with a nested array
         nestedSchema(paths, field, cleanTree, value, prefix); // eslint-disable-line no-use-before-define
         // Merge top level es settings
-        for (prop in value) {
+        for (const prop in value) {
           // Map to field if it's an Elasticsearch option
           if (value.hasOwnProperty(prop) && prop.indexOf('es_') === 0) {
             // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
@@ -203,9 +183,9 @@ function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
         paths[field].options.es_schema.tree &&
         paths[field].options.es_schema.paths
       ) {
-        subTree = paths[field].options.es_schema.tree;
+        const subTree = paths[field].options.es_schema.tree;
         if (paths[field].options.es_select) {
-          for (treeNode in subTree) {
+          for (const treeNode in subTree) {
             if (!subTree.hasOwnProperty(treeNode)) {
               continue;
             }
@@ -231,7 +211,7 @@ function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
       } else {
         // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field] = {};
-        for (key in value) {
+        for (const key in value) {
           if (value.hasOwnProperty(key)) {
             // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             cleanTree[field][key] = value[key];
@@ -245,7 +225,7 @@ function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
     } else {
       // Because it is an geo_* object!!
       if (typeof value === 'object') {
-        for (key in value) {
+        for (const key in value) {
           if (value.hasOwnProperty(key) && /^geo_/.test(key)) {
             // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             cleanTree[field] = value[key];
@@ -259,7 +239,6 @@ function getCleanTree(tree: any, paths: any, inPrefix: any, isRoot: any) {
       }
 
       // If it's a virtual type, don't map it
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'getters' does not exist on type '{}'.
       if (typeof value === 'object' && value.getters && value.setters && value.options) {
         continue;
       }
@@ -344,7 +323,7 @@ function nestedSchema(paths: any, field: any, cleanTree: any, value: any, prefix
 
 export const Generator = {
   // Schema<any, any, any>
-  generateMapping: function generateMapping(schema: any) {
+  generateMapping: function generateMapping(schema: any): { properties: any } {
     const cleanTree = getCleanTree(schema.tree, schema.paths, '', true);
     // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     delete cleanTree[schema.get('versionKey')];

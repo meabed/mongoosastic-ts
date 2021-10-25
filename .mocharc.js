@@ -24,7 +24,6 @@ module.exports = {
   recursive: false,
   reporter: 'spec',
   require: ['should', 'co-mocha'],
-  retries: 1,
   spec: ['./test/*.ts'],
   timeout: '5s',
   'trace-warnings': true,
