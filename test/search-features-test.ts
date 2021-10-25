@@ -171,7 +171,7 @@ describe('Query DSL', async () => {
       const getNames = function (res: any) {
         return res._source.name;
       };
-      await sleep(1000);
+      await sleep(900);
       const res = await bondModel.search({
         match: {
           name: {
