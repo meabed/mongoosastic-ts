@@ -62,7 +62,7 @@ describe('GeoTest', async function () {
 
   it('should be able to find geo coordinates in the indexes', async function () {
     // ES request
-    await sleep(2000);
+    await sleep(4000);
     const res = await geoModel.search(
       {
         match_all: {},

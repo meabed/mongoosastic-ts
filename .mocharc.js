@@ -25,6 +25,6 @@ module.exports = {
   reporter: 'spec',
   require: ['ts-node/register', 'should', 'co-mocha'],
   spec: ['./test/*.ts'],
-  timeout: '5s',
+  timeout: '8s',
   'trace-warnings': true,
 };
