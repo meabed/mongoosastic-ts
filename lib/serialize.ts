@@ -1,15 +1,16 @@
-export function serialize(this: any, model: any, mapping: any) {
+import { LeanDocument } from 'mongoose';
+
+export function serialize(this: any, model: LeanDocument<any>, mapping: { properties?: any; cast?: any }) {
   let name;
 
   function _serializeObject(object: any, mappingData: any) {
-    const serialized = {};
+    const serialized: Record<string, any> = {};
     let field;
     let val;
     for (field in mappingData.properties) {
       if (mappingData.properties.hasOwnProperty(field)) {
         val = serialize.call(object, object[field], mappingData.properties[field]);
         if (val !== undefined) {
-          // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           serialized[field] = val;
         }
       }

@@ -1,4 +1,4 @@
-import mongoose, { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
+import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
 import { Client, IndexDocumentParams } from 'elasticsearch';
 
 export interface MongoosasticModel<T> extends Model<T> {
