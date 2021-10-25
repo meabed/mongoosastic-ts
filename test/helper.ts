@@ -12,25 +12,6 @@ export async function deleteIndexIfExists(indexes: string[]) {
   }
 }
 
-export async function deleteDocs(models: any) {
-  for (const model of models) {
-    try {
-      await model.deleteMany();
-    } catch (e) {
-      // console.error(e);
-    }
-  }
-}
-
-export function bookTitlesArray(): string[] {
-  const books = ['American Gods', 'Gods of the Old World', 'American Gothic'];
-  let idx;
-  for (idx = 0; idx < 50; idx++) {
-    books.push('ABABABA' + idx);
-  }
-  return books;
-}
-
 export function getEsClient() {
   return esClient;
 }

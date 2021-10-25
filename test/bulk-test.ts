@@ -1,6 +1,15 @@
-import { bookTitlesArray, deleteIndexIfExists, getEsClient, sleep } from './helper';
+import { deleteIndexIfExists, getEsClient, sleep } from './helper';
 import { bulkModel } from './models/bulk';
 import { expect } from 'chai';
+
+export function bookTitlesArray(): string[] {
+  const books = ['American Gods', 'Gods of the Old World', 'American Gothic'];
+  let idx;
+  for (idx = 0; idx < 50; idx++) {
+    books.push('ABABABA' + idx);
+  }
+  return books;
+}
 
 describe('Bulk mode', async function () {
   before(async function () {

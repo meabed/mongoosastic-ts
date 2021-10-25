@@ -1,6 +1,5 @@
-import { config } from './config';
 import { connect } from 'mongoose';
 
 before(async function () {
-  await connect(config.mongoUrl);
+  await connect('mongodb://0.0.0.0:27017/es-test');
 });
