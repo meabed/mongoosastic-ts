@@ -1,14 +1,39 @@
-import { LeanDocument, Document, Model, Schema, Types } from 'mongoose';
-import { Client, IndexDocumentParams } from 'elasticsearch';
+import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
+import { Client, IndexDocumentParams, NameList } from 'elasticsearch';
+
+export type MongoosasticNestedOpts = Record<
+  string,
+  string | boolean | number | Record<string, string | boolean | number>
+>;
+
+export interface IMongoosasticSearchParam {
+  query_string?: Record<string, any>;
+  match_all?: Record<string, any>;
+  match?: Record<string, any>;
+  range?: Record<string, any>;
+  term?: Record<string, any>;
+}
+
+export interface IMongoosasticSearchOpts {
+  suggest?: any;
+  sort?: any;
+  min_score?: number;
+  aggs?: any;
+  highlight?: boolean;
+  index?: string;
+  routing?: string;
+  hydrate?: boolean;
+  hydrateOptions?: { lean?: boolean; sort?: string; select?: string };
+}
 
 export interface MongoosasticModel<T> extends Model<T> {
-  search: (params: any, opt?: any) => Promise<any>;
+  search: (params: IMongoosasticSearchParam, opt?: IMongoosasticSearchOpts) => Promise<any>;
   createMapping: (settings?: any, mappings?: any) => Promise<any>;
-  esTruncate: (opt?: any) => Promise<any>;
-  esCount: (opt?: any) => Promise<any>;
-  index: (opt?: any) => Promise<any>;
-  flush: (opt?: any) => Promise<any>;
-  refresh: (opt?: any) => Promise<any>;
+  esTruncate: (opt?: MongoosasticNestedOpts) => Promise<any>;
+  esCount: (opt?: MongoosasticNestedOpts) => Promise<any>;
+  index: (opt?: MongoosasticNestedOpts) => Promise<any>;
+  flush: (opt?: MongoosasticNestedOpts) => Promise<any>;
+  refresh: (opt?: MongoosasticNestedOpts) => Promise<any>;
   esClient: Client;
 }
 
@@ -50,7 +75,7 @@ export interface MongoosasticOpts<T = any> {
     size: number; // preferred number of docs to bulk index
     delay: number; // milliseconds to wait for enough docs to meet size constraint
   };
-  hydrateOptions: any;
+  hydrateOptions: { lean?: boolean; sort?: string; select?: string };
   hydrate?: boolean;
   populate: string[];
   index?: string;

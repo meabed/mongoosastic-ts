@@ -1,11 +1,15 @@
-import elasticsearch, { Client as EsClient, ConfigOptions, IndexDocumentParams, SearchParams } from 'elasticsearch';
+import { Client as EsClient, ConfigOptions, IndexDocumentParams, SearchParams } from 'elasticsearch';
 import events from 'events';
 import { Generator } from './mapping-generator';
 import { serialize } from './serialize';
-import { MongoosasticBulkIndexOpts, MongoosasticModel, MongoosasticOpts, MongoosasticSchema } from './types';
+import {
+  IMongoosasticSearchOpts,
+  MongoosasticBulkIndexOpts,
+  MongoosasticModel,
+  MongoosasticOpts,
+  MongoosasticSchema,
+} from './types';
 import { Model, Query, Schema } from 'mongoose';
-
-const nop = function nop() {};
 
 function isString(subject: any) {
   return typeof subject === 'string';
@@ -32,7 +36,7 @@ function createEsClient(options: MongoosasticOpts) {
 
   esOptions.log = options ? options.log : null;
 
-  return new elasticsearch.Client(esOptions);
+  return new EsClient(esOptions);
 }
 
 function filterMappingFromMixed(props: any) {
@@ -540,9 +544,9 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
    * @param inQuery - **full** query object to perform search with
    * @param inOpts - (optional) special search options, such as hydrate
    */
-  schema.statics.esSearch = async function (inQuery: any, inOpts: any) {
+  schema.statics.esSearch = async function (inQuery: any, inOpts: IMongoosasticSearchOpts) {
     const _this = this;
-    let opts = inOpts ?? {};
+    let opts = inOpts ?? ({} as IMongoosasticSearchOpts);
     const query = inQuery === null ? undefined : inQuery;
 
     opts.hydrateOptions = opts?.hydrateOptions || defaultHydrateOptions || {};

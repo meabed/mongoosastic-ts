@@ -40,6 +40,7 @@ describe('references', async function () {
     });
 
     it('should be able to execute a simple query', async function () {
+      await sleep(1000);
       const results = await postModel.search({
         query_string: {
           query: 'jake',
