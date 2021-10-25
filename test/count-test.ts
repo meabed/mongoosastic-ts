@@ -21,7 +21,7 @@ describe('Count', async () => {
   });
 
   it('should count a type', async () => {
-    await sleep(700);
+    await sleep(1000);
     const results = await commentModel.esCount({
       term: {
         user: 'terry',
