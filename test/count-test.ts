@@ -1,8 +1,8 @@
 import { commentModel } from './models/comment';
 import { deleteIndexIfExists, sleep } from './helper';
 
-describe('Count', async () => {
-  before(async () => {
+describe('Count', async function () {
+  before(async function () {
     await deleteIndexIfExists(['comments']);
     await commentModel.deleteMany();
     await commentModel.create({
@@ -15,12 +15,12 @@ describe('Count', async () => {
     });
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['comments']);
     await commentModel.deleteMany();
   });
 
-  it('should count a type', async () => {
+  it('should count a type', async function () {
     await sleep(1000);
     const results = await commentModel.esCount({
       term: {
@@ -30,7 +30,7 @@ describe('Count', async () => {
     results.count.should.eql(1);
   });
 
-  it('should count a type without query', async () => {
+  it('should count a type without query', async function () {
     const results = await commentModel.esCount();
     results.count.should.eql(2);
   });

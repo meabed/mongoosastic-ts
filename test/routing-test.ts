@@ -1,18 +1,18 @@
 import { deleteIndexIfExists, sleep } from './helper';
 import { taskModel } from './models/task';
 
-describe('Routing', async () => {
-  before(async () => {
+describe('Routing', async function () {
+  before(async function () {
     await deleteIndexIfExists(['tasks']);
     await taskModel.deleteMany();
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['tasks']);
     await taskModel.deleteMany();
   });
 
-  it('should found task if no routing', async () => {
+  it('should found task if no routing', async function () {
     const task = await taskModel.create({ content: Date.now() });
     await sleep(1200);
     const res = await taskModel.search({
@@ -25,7 +25,7 @@ describe('Routing', async () => {
     await task.remove();
   });
 
-  it('should found task if routing with task.content', async () => {
+  it('should found task if routing with task.content', async function () {
     const now = Date.now();
     const task = await taskModel.create({ content: now });
     await sleep(1200);
@@ -44,7 +44,7 @@ describe('Routing', async () => {
     await task.remove();
   });
 
-  it('should not found task if routing with invalid routing', async () => {
+  it('should not found task if routing with invalid routing', async function () {
     const now = Date.now();
     const task = await taskModel.create({ content: now });
 
@@ -63,7 +63,7 @@ describe('Routing', async () => {
     await task.remove();
   });
 
-  it('should not found task after remove', async () => {
+  it('should not found task after remove', async function () {
     const task = await taskModel.create({ content: Date.now() });
     await sleep(1200);
     await task.remove();
@@ -76,7 +76,7 @@ describe('Routing', async () => {
     res.hits.total.should.eql(0);
   });
 
-  it('should not found task after unIndex', async () => {
+  it('should not found task after unIndex', async function () {
     const task = await taskModel.create({ content: Date.now() });
     await sleep(1200);
     await task.unIndex();
@@ -91,7 +91,7 @@ describe('Routing', async () => {
     await task.remove();
   });
 
-  it('should not found task after esTruncate', async () => {
+  it('should not found task after esTruncate', async function () {
     const task = await taskModel.create({ content: Date.now() });
     await sleep(1200);
     await taskModel.esTruncate();

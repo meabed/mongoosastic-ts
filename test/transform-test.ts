@@ -2,17 +2,17 @@ import { deleteIndexIfExists, sleep } from './helper';
 import { taskModel } from './models/task';
 import { repoModel } from './models/repo';
 
-describe('Transform mode', async () => {
-  before(async () => {
+describe('Transform mode', async function () {
+  before(async function () {
     await deleteIndexIfExists(['repos']);
     await taskModel.deleteMany();
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['repos']);
     await taskModel.deleteMany();
   });
-  it('should index with field "fullTitle"', async () => {
+  it('should index with field "fullTitle"', async function () {
     await repoModel.create({
       name: 'LOTR',
       settingLicense: '',

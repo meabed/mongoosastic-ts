@@ -1,18 +1,18 @@
 import { deleteIndexIfExists, sleep } from './helper';
 import { phoneModel } from './models/phone';
 
-describe('Custom Properties for Mapping', async () => {
-  before(async () => {
+describe('Custom Properties for Mapping', async function () {
+  before(async function () {
     await deleteIndexIfExists(['phones']);
     await phoneModel.deleteMany();
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['phones']);
     await phoneModel.deleteMany();
   });
 
-  it('should index with field "fullTitle"', async () => {
+  it('should index with field "fullTitle"', async function () {
     await phoneModel.create({
       name: 'iPhone',
     });

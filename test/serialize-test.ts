@@ -4,7 +4,7 @@ import { serialize } from '../lib/serialize';
 
 const mapping = Generator.generateMapping(PersonSchema);
 
-describe('serialize', async () => {
+describe('serialize', async function () {
   const dude = new personModel({
     name: {
       first: 'Jeffrey',
@@ -33,33 +33,33 @@ describe('serialize', async () => {
     },
   }).toObject();
 
-  it('should serialize a document with missing bits', async () => {
+  it('should serialize a document with missing bits', async function () {
     const serialized = serialize(millionaire, mapping);
     serialized.should.have.property('games', []);
   });
 
-  describe('with no indexed fields', async () => {
+  describe('with no indexed fields', async function () {
     const serialized = serialize(dude, mapping);
-    it('should serialize model fields', async () => {
+    it('should serialize model fields', async function () {
       serialized.name.first.should.eql('Jeffrey');
       serialized.name.last.should.eql('Lebowski');
     });
 
-    it('should serialize object ids as strings', async () => {
+    it('should serialize object ids as strings', async function () {
       serialized.bowlingBall.should.eql(dude.bowlingBall);
       serialized.bowlingBall.should.be.type('object');
     });
 
-    it('should serialize dates in ISO 8601 format', async () => {
+    it('should serialize dates in ISO 8601 format', async function () {
       serialized.dob.should.eql(dude.dob.toJSON());
     });
 
-    it('should serialize nested arrays', async () => {
+    it('should serialize nested arrays', async function () {
       serialized.games.should.have.lengthOf(2);
       serialized.games[0].should.have.property('score', 80);
     });
 
-    it('should cast and serialize field', async () => {
+    it('should cast and serialize field', async function () {
       serialized.somethingToCast.should.eql('Something has been cast');
     });
   });

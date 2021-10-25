@@ -2,8 +2,8 @@ import { tweetModel } from './models/tweet';
 import { deleteIndexIfExists, sleep } from './helper';
 import { expect } from 'chai';
 
-describe('Index Method', async () => {
-  before(async () => {
+describe('Index Method', async function () {
+  before(async function () {
     await deleteIndexIfExists(['tweets', 'public_tweets']);
     await tweetModel.deleteMany();
     await tweetModel.create({
@@ -13,12 +13,12 @@ describe('Index Method', async () => {
     });
   });
 
-  after(async () => {
+  after(async function () {
     await tweetModel.deleteMany();
     await deleteIndexIfExists(['tweets', 'public_tweets']);
   });
 
-  it('should be able to index it directly without saving', async () => {
+  it('should be able to index it directly without saving', async function () {
     const doc = await tweetModel.findOne({ message: 'I know kung-fu!' });
     doc.message = 'I know nodejitsu!';
     await doc.index();
@@ -31,7 +31,7 @@ describe('Index Method', async () => {
     expect(res.hits.hits[0]._source.message).to.be.eql('I know nodejitsu!');
   });
 
-  it('should be able to index to alternative index', async () => {
+  it('should be able to index to alternative index', async function () {
     const doc = await tweetModel.findOne({
       message: 'I know kung-fu!',
     });

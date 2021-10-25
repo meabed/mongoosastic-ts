@@ -1,18 +1,18 @@
 import { deleteIndexIfExists, sleep } from './helper';
 import { foodModel } from './models/food';
 
-describe('Custom Serialize', async () => {
-  before(async () => {
+describe('Custom Serialize', async function () {
+  before(async function () {
     await deleteIndexIfExists(['foods']);
     await foodModel.deleteMany();
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['foods']);
     await foodModel.deleteMany();
   });
 
-  it('should index all fields returned from the customSerialize function', async () => {
+  it('should index all fields returned from the customSerialize function', async function () {
     await foodModel.create({ name: 'pizza' });
     await sleep(1000);
     const results = await foodModel.search({ query_string: { query: 'pizza' } });

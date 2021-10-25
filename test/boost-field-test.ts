@@ -2,18 +2,18 @@ import { blogModel } from './models/blog';
 import { deleteIndexIfExists, getEsClient, sleep } from './helper';
 import { expect } from 'chai';
 
-describe('Add Boost Option Per Field', async () => {
-  before(async () => {
+describe('Add Boost Option Per Field', async function () {
+  before(async function () {
     await blogModel.deleteMany();
     await deleteIndexIfExists(['blogs']);
   });
 
-  after(async () => {
+  after(async function () {
     await blogModel.deleteMany();
     await deleteIndexIfExists(['blogs']);
   });
 
-  it('should create a mapping with boost field added', async () => {
+  it('should create a mapping with boost field added', async function () {
     await blogModel.createMapping();
     await sleep(200);
     const res = await getEsClient().indices.getMapping({

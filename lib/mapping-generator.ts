@@ -8,8 +8,21 @@ import cloneDeep from 'lodash.clonedeep';
 // @param field
 // @return the type or false
 //
-function getTypeFromPaths(paths: Record<string, any>, field: string) {
-  let type = false;
+function getTypeFromPaths(
+  paths: {
+    [p: string]: {
+      instance: string;
+      options?: {
+        type?: any;
+        es_select?: string;
+        es_schema: { paths?: any; tree?: any; es_select?: string };
+        instance?: string;
+      };
+    };
+  },
+  field: string
+) {
+  let type: boolean | string = false;
 
   if (paths[field] && paths[field].options.type === Date) {
     return 'date';
@@ -20,7 +33,7 @@ function getTypeFromPaths(paths: Record<string, any>, field: string) {
   }
 
   if (paths[field]) {
-    type = paths[field].instance ? paths[field].instance.toLowerCase() : 'object';
+    type = !!paths[field].instance ? paths[field].instance.toLowerCase() : 'object';
   }
 
   return type;
@@ -35,20 +48,8 @@ function getTypeFromPaths(paths: Record<string, any>, field: string) {
 // @param inPrefix
 // @return the mapping
 //
-type ICleanTreeValue =
-  | {
-      options: any;
-      getters: any;
-      ref?: string;
-      es_schema?: any;
-      type?: string;
-      es_type?: string;
-      es_indexed?: boolean;
-    }
-  | any;
-
-function getMapping(cleanTree: any, inPrefix: string) {
-  const mapping: Record<string, { properties?: any; type?: string }> = {};
+function getMapping(cleanTree: { [x: string]: any; hasOwnProperty?: any }, inPrefix: string) {
+  const mapping: any = {};
   const implicitFields = [];
   let hasEsIndex = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
@@ -60,7 +61,8 @@ function getMapping(cleanTree: any, inPrefix: string) {
     const value = cleanTree[field];
     mapping[field] = {};
     mapping[field].type = value.type;
-    // Check if field was explicit indexed, if not keep track implicitly
+
+    // Check if field was explicity indexed, if not keep track implicitly
     if (value.es_indexed) {
       hasEsIndex = true;
     } else if (value.type) {
@@ -94,7 +96,6 @@ function getMapping(cleanTree: any, inPrefix: string) {
     for (const prop in value) {
       // Map to field if it's an Elasticsearch option
       if (value.hasOwnProperty(prop) && prop.indexOf('es_') === 0 && prop !== 'es_indexed') {
-        // @ts-expect-error ts-migrate(2538) FIXME: Type 'any[]' cannot be used as an index type.
         mapping[field][prop.replace(/^es_/, '')] = value[prop];
       }
     }
@@ -139,12 +140,28 @@ function getMapping(cleanTree: any, inPrefix: string) {
 // @param prefix
 // @return the tree
 //
-function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
-  const cleanTree = {};
+function getCleanTree(
+  tree: { [x: string]: {} },
+  paths: {
+    [x: string]: {
+      instance: string;
+      options?: {
+        type?: any;
+        es_select?: string;
+        es_schema: { paths?: any; tree?: any; es_select?: string };
+        instance?: string;
+      };
+    };
+  },
+  inPrefix: string,
+  isRoot?: boolean
+) {
+  const cleanTree: any = {};
+  let value: any = {};
   let geoFound = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
 
-  const tree: any = cloneDeep(treeParam);
+  tree = cloneDeep(tree);
   paths = cloneDeep(paths);
 
   for (const field in tree) {
@@ -153,7 +170,7 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
     }
 
     const type = getTypeFromPaths(paths, prefix + field);
-    const value = tree[field];
+    value = tree[field];
 
     if (value.es_indexed === false) {
       continue;
@@ -162,7 +179,6 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
     // Field has some kind of type
     if (type) {
       // If it is an nested schema
-      // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       if (value[0] || type === 'embedded') {
         // A nested array can contain complex objects
         nestedSchema(paths, field, cleanTree, value, prefix); // eslint-disable-line no-use-before-define
@@ -173,7 +189,6 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
         for (const prop in value) {
           // Map to field if it's an Elasticsearch option
           if (value.hasOwnProperty(prop) && prop.indexOf('es_') === 0) {
-            // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             cleanTree[field][prop] = value[prop];
           }
         }
@@ -194,7 +209,6 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
             }
           }
         }
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field] = getCleanTree(subTree, paths[field].options.es_schema.paths, '');
       } else if (
         value === String ||
@@ -204,20 +218,15 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
         value === Boolean ||
         value === Array
       ) {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field] = {};
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field].type = type;
       } else {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field] = {};
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             cleanTree[field][key] = value[key];
           }
         }
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field].type = type;
       }
 
@@ -227,7 +236,6 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
       if (typeof value === 'object') {
         for (const key in value) {
           if (value.hasOwnProperty(key) && /^geo_/.test(key)) {
-            // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             cleanTree[field] = value[key];
             geoFound = true;
           }
@@ -245,7 +253,6 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
 
       // Because it is some other object!! Or we assumed that it is one.
       if (typeof value === 'object') {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         cleanTree[field] = getCleanTree(value, paths, prefix + field);
       }
     }
@@ -264,9 +271,20 @@ function getCleanTree(treeParam: any, paths: any, inPrefix: any, isRoot: any) {
 // @param prefix
 // @return cleanTree modified
 //
-function nestedSchema(paths: any, field: any, cleanTree: any, value: any, prefix: any) {
-  let treeNode;
-  let subTree;
+function nestedSchema(
+  paths: {
+    [x: string]:
+      | any
+      | { caster: { instance: string } }
+      | { schema: any }
+      | { options: { es_schema: { paths: any } } }
+      | { options: any; instance: string };
+  },
+  field: string,
+  cleanTree: { [x: string]: { type: string } } | any,
+  value: any[],
+  prefix: string
+) {
   // A nested array can contain complex objects
   if (
     paths[prefix + field] &&
@@ -274,7 +292,6 @@ function nestedSchema(paths: any, field: any, cleanTree: any, value: any, prefix
     paths[prefix + field].schema.tree &&
     paths[prefix + field].schema.paths
   ) {
-    // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
     cleanTree[field] = getCleanTree(paths[prefix + field].schema.tree, paths[prefix + field].schema.paths, '');
   } else if (
     paths[prefix + field] &&
@@ -284,9 +301,9 @@ function nestedSchema(paths: any, field: any, cleanTree: any, value: any, prefix
     paths[prefix + field].options.type[0].es_schema.paths
   ) {
     // A nested array of references filtered by the 'es_select' option
-    subTree = paths[field].options.type[0].es_schema.tree;
+    const subTree = paths[field].options.type[0].es_schema.tree;
     if (paths[field].options.type[0].es_select) {
-      for (treeNode in subTree) {
+      for (const treeNode in subTree) {
         if (!subTree.hasOwnProperty(treeNode)) {
           continue;
         }
@@ -295,7 +312,6 @@ function nestedSchema(paths: any, field: any, cleanTree: any, value: any, prefix
         }
       }
     }
-    // @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
     cleanTree[field] = getCleanTree(subTree, paths[prefix + field].options.type[0].es_schema.paths, '');
   } else if (paths[prefix + field] && paths[prefix + field].caster && paths[prefix + field].caster.instance) {
     // Even for simple types the value can be an object if there is other attributes than type
@@ -325,7 +341,6 @@ export const Generator = {
   // Schema<any, any, any>
   generateMapping: function generateMapping(schema: any): { properties: any } {
     const cleanTree = getCleanTree(schema.tree, schema.paths, '', true);
-    // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     delete cleanTree[schema.get('versionKey')];
     const mapping = getMapping(cleanTree, '');
     return { properties: mapping };

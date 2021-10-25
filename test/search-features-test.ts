@@ -2,8 +2,8 @@ import { bondModel } from './models/bond';
 import { deleteIndexIfExists, sleep } from './helper';
 import { expect } from 'chai';
 
-describe('Query DSL', async () => {
-  before(async () => {
+describe('Query DSL', async function () {
+  before(async function () {
     await bondModel.deleteMany();
     await deleteIndexIfExists(['bonds']);
     await bondModel.create({
@@ -29,13 +29,13 @@ describe('Query DSL', async () => {
     await sleep(1200);
   });
 
-  after(async () => {
+  after(async function () {
     await bondModel.deleteMany();
     await deleteIndexIfExists(['bonds']);
   });
 
-  describe('Range', async () => {
-    it('should be able to find within range', async () => {
+  describe('Range', async function () {
+    it('should be able to find within range', async function () {
       const res = await bondModel.search({
         range: {
           price: {
@@ -52,15 +52,15 @@ describe('Query DSL', async () => {
     });
   });
 
-  describe('Sort', async () => {
+  describe('Sort', async function () {
     const getNames = function (res: any) {
       return res._source.name;
     };
     const expectedDesc = ['Legal', 'Construction', 'Commercial', 'Bail'];
     const expectedAsc = expectedDesc.concat([]).reverse(); // clone and reverse
 
-    describe('Simple sort', async () => {
-      it('should be able to return all data, sorted by name ascending', async () => {
+    describe('Simple sort', async function () {
+      it('should be able to return all data, sorted by name ascending', async function () {
         const res = await bondModel.search(
           {
             match_all: {},
@@ -73,7 +73,7 @@ describe('Query DSL', async () => {
         expectedAsc.should.eql(res.hits.hits.map(getNames));
       });
 
-      it('should be able to return all data, sorted by name descending', async () => {
+      it('should be able to return all data, sorted by name descending', async function () {
         const res = await bondModel.search(
           {
             match_all: {},
@@ -87,8 +87,8 @@ describe('Query DSL', async () => {
       });
     });
 
-    describe('Complex sort', async () => {
-      it('should be able to return all data, sorted by name ascending', async () => {
+    describe('Complex sort', async function () {
+      it('should be able to return all data, sorted by name ascending', async function () {
         const res = await bondModel.search(
           {
             match_all: {},
@@ -105,7 +105,7 @@ describe('Query DSL', async () => {
         expectedAsc.should.eql(res.hits.hits.map(getNames));
       });
 
-      it('should be able to return all data, sorted by name descending', async () => {
+      it('should be able to return all data, sorted by name descending', async function () {
         const res = await bondModel.search(
           {
             match_all: {},
@@ -127,9 +127,9 @@ describe('Query DSL', async () => {
     });
   });
 
-  describe('Aggregations', async () => {
-    describe('Simple aggregation', async () => {
-      it('should be able to group by term', async () => {
+  describe('Aggregations', async function () {
+    describe('Simple aggregation', async function () {
+      it('should be able to group by term', async function () {
         const res = await bondModel.search(
           {
             match_all: {},
@@ -166,8 +166,8 @@ describe('Query DSL', async () => {
     });
   });
 
-  describe('Fuzzy Query', async () => {
-    it('should do a fuzzy query', async () => {
+  describe('Fuzzy Query', async function () {
+    it('should do a fuzzy query', async function () {
       const getNames = function (res: any) {
         return res._source.name;
       };

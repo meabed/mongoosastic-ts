@@ -2,16 +2,16 @@ import { deleteIndexIfExists } from './helper';
 import { refreshModel } from './models/refresh';
 
 describe('Refresh', function () {
-  before(async () => {
+  before(async function () {
     await deleteIndexIfExists(['refreshes']);
     await refreshModel.deleteMany();
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['refreshes']);
     await refreshModel.deleteMany();
   });
-  it('should flushed after refresh', async () => {
+  it('should flushed after refresh', async function () {
     await refreshModel.createMapping();
     await refreshModel.create({ title: `${Date.now()}` });
     const refreshRes = await refreshModel.refresh();

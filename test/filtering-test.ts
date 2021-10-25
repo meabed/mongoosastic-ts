@@ -1,18 +1,18 @@
 import { deleteIndexIfExists, sleep } from './helper';
 import { movieModel } from './models/movie';
 
-describe('Filter mode', async () => {
-  before(async () => {
+describe('Filter mode', async function () {
+  before(async function () {
     await deleteIndexIfExists(['movies']);
     await movieModel.deleteMany();
   });
 
-  after(async () => {
+  after(async function () {
     await deleteIndexIfExists(['movies']);
     await movieModel.deleteMany();
   });
 
-  it('should index horror genre', async () => {
+  it('should index horror genre', async function () {
     await movieModel.create({
       title: 'LOTR',
       genre: 'horror',
@@ -27,7 +27,7 @@ describe('Filter mode', async () => {
     results.hits.total.should.eql(1);
   });
 
-  it('should not index action genre', async () => {
+  it('should not index action genre', async function () {
     await movieModel.create({
       title: 'Man in Black',
       genre: 'action',
@@ -44,7 +44,7 @@ describe('Filter mode', async () => {
     results.hits.total.should.eql(0);
   });
 
-  it('should unindex filtered models', async () => {
+  it('should unindex filtered models', async function () {
     const movie = await movieModel.create({
       title: 'REC',
       genre: 'horror',
