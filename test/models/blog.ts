@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -11,7 +11,7 @@ export interface IBlogModel extends Document, MongoosasticDocument {
   message?: string;
 }
 
-const BlogSchema = new mongoose.Schema<IBlogModel>({
+const BlogSchema = new Schema<IBlogModel>({
   title: {
     type: String,
     es_boost: 2.0,
@@ -32,4 +32,4 @@ BlogSchema.plugin(mongoosastic, {
   type: 'blog',
 });
 
-export const blogModel = mongoose.model<IBlogModel, MongoosasticModel<IBlogModel>>('Blog', BlogSchema);
+export const blogModel = model<IBlogModel, MongoosasticModel<IBlogModel>>('Blog', BlogSchema);

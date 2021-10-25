@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -12,7 +12,7 @@ export interface IBulkModel extends Document, MongoosasticDocument {
   message?: string;
 }
 
-const BulkSchema = new mongoose.Schema<IBulkModel>({
+const BulkSchema = new Schema<IBulkModel>({
   title: String,
   user: String,
   random: { type: Number, es_type: 'keyword', es_boost: 2.0 },
@@ -30,4 +30,4 @@ BulkSchema.plugin(mongoosastic, {
   },
 } as MongoosasticOpts);
 
-export const bulkModel = mongoose.model<IBulkModel, MongoosasticModel<IBulkModel>>('Bulk', BulkSchema);
+export const bulkModel = model<IBulkModel, MongoosasticModel<IBulkModel>>('Bulk', BulkSchema);

@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -10,17 +10,17 @@ export interface IMappingModel extends Document, MongoosasticDocument {
   obj_mixed?: any;
 }
 
-const MappingSchema = new mongoose.Schema<IMappingModel>({
+const MappingSchema = new Schema<IMappingModel>({
   string: String,
   mixed_field: {
-    type: mongoose.Schema.Types.Mixed,
+    type: Schema.Types.Mixed,
   },
   mixed_arr_field: {
-    type: [mongoose.Schema.Types.Mixed],
+    type: [Schema.Types.Mixed],
   },
   obj_mixed: {
     mixed: {
-      type: mongoose.Schema.Types.Mixed,
+      type: Schema.Types.Mixed,
     },
   },
 });
@@ -30,4 +30,4 @@ MappingSchema.plugin(mongoosastic, {
   type: 'mapping',
 } as MongoosasticOpts<IMappingModel>);
 
-export const mappingModel = mongoose.model<IMappingModel, MongoosasticModel<IMappingModel>>('Mapping', MappingSchema);
+export const mappingModel = model<IMappingModel, MongoosasticModel<IMappingModel>>('Mapping', MappingSchema);

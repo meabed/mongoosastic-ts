@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -9,7 +9,7 @@ export interface IBondModel extends Document, MongoosasticDocument {
   price?: number;
 }
 
-const BondSchema = new mongoose.Schema<IBondModel>({
+const BondSchema = new Schema<IBondModel>({
   name: String,
   type: {
     type: String,
@@ -23,4 +23,4 @@ BondSchema.plugin(mongoosastic, {
   type: 'bond',
 } as MongoosasticOpts<IBondModel>);
 
-export const bondModel = mongoose.model<IBondModel, MongoosasticModel<IBondModel>>('Bond', BondSchema);
+export const bondModel = model<IBondModel, MongoosasticModel<IBondModel>>('Bond', BondSchema);

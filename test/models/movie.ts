@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -8,7 +8,7 @@ export interface IMovieModel extends Document, MongoosasticDocument {
   genre?: string;
 }
 
-const MovieSchema = new mongoose.Schema<IMovieModel>({
+const MovieSchema = new Schema<IMovieModel>({
   title: {
     type: String,
     required: true,
@@ -27,9 +27,9 @@ const MovieSchema = new mongoose.Schema<IMovieModel>({
 MovieSchema.plugin(mongoosastic, {
   index: 'movies',
   type: 'movie',
-  filter: (self) => {
+  filter: function (self) {
     return self.genre === 'action';
   },
 } as MongoosasticOpts);
 
-export const movieModel = mongoose.model<IMovieModel, MongoosasticModel<IMovieModel>>('Movie', MovieSchema);
+export const movieModel = model<IMovieModel, MongoosasticModel<IMovieModel>>('Movie', MovieSchema);

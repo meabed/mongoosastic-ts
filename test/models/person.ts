@@ -31,7 +31,7 @@ export const PersonSchema = new Schema<IPersonModel>({
   ],
   somethingToCast: {
     type: String,
-    es_cast: (element: string) => {
+    es_cast: function (element: string) {
       return element + ' has been cast';
     },
   },

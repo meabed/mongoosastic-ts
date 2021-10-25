@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -10,7 +10,7 @@ export interface ITweetModel extends Document, MongoosasticDocument {
   message?: string;
 }
 
-const TweetSchema = new mongoose.Schema<ITweetModel>({
+const TweetSchema = new Schema<ITweetModel>({
   user: String,
   userId: Number,
   post_date: Date,
@@ -22,4 +22,4 @@ TweetSchema.plugin(mongoosastic, {
   type: 'tweet',
 });
 
-export const tweetModel = mongoose.model<ITweetModel, MongoosasticModel<ITweetModel>>('Tweet', TweetSchema);
+export const tweetModel = model<ITweetModel, MongoosasticModel<ITweetModel>>('Tweet', TweetSchema);

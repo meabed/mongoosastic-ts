@@ -25,7 +25,7 @@ const RepoSchema = new Schema<IRepoModel>({
 RepoSchema.plugin(mongoosastic, {
   index: 'repos',
   type: 'repo',
-  transform: (data, repo) => {
+  transform: function (data, repo) {
     data.license = repo.settingLicense || repo.detectedLicense;
     return data;
   },

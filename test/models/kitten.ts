@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -8,7 +8,7 @@ export interface IKittenModel extends Document, MongoosasticDocument {
   breed?: string;
 }
 
-const KittenSchema = new mongoose.Schema<IKittenModel>({
+const KittenSchema = new Schema<IKittenModel>({
   name: {
     type: String,
     es_type: 'completion',
@@ -25,4 +25,4 @@ KittenSchema.plugin(mongoosastic, {
   type: 'kitten',
 });
 
-export const kittenModel = mongoose.model<IKittenModel, MongoosasticModel<IKittenModel>>('Kitten', KittenSchema);
+export const kittenModel = model<IKittenModel, MongoosasticModel<IKittenModel>>('Kitten', KittenSchema);

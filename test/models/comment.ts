@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -12,7 +12,7 @@ export interface ICommentModel extends Document, MongoosasticDocument {
   message?: string;
 }
 
-const CommentSchema = new mongoose.Schema<ICommentModel>({
+const CommentSchema = new Schema<ICommentModel>({
   title: String,
   user: String,
   random: { type: Number, es_type: 'keyword', es_boost: 2.0 },
@@ -30,4 +30,4 @@ CommentSchema.plugin(mongoosastic, {
   },
 } as MongoosasticOpts);
 
-export const commentModel = mongoose.model<ICommentModel, MongoosasticModel<ICommentModel>>('Comment', CommentSchema);
+export const commentModel = model<ICommentModel, MongoosasticModel<ICommentModel>>('Comment', CommentSchema);

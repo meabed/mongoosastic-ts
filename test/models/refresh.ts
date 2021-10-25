@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
@@ -7,7 +7,7 @@ export interface IRefreshModel extends Document, MongoosasticDocument {
   title?: string;
 }
 
-const RefreshSchema = new mongoose.Schema<IRefreshModel>({
+const RefreshSchema = new Schema<IRefreshModel>({
   title: {
     type: String,
   },
@@ -18,4 +18,4 @@ RefreshSchema.plugin(mongoosastic, {
   type: 'refresh',
 } as MongoosasticOpts<IRefreshModel>);
 
-export const refreshModel = mongoose.model<IRefreshModel, MongoosasticModel<IRefreshModel>>('Refresh', RefreshSchema);
+export const refreshModel = model<IRefreshModel, MongoosasticModel<IRefreshModel>>('Refresh', RefreshSchema);
