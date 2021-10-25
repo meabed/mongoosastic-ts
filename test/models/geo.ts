@@ -19,7 +19,7 @@ const GeoSchema = new Schema<IGeoModel>({
       type: String,
       es_type: 'geo_shape',
       es_tree: 'quadtree',
-      es_precision: '1km',
+      es_precision: '10km',
     },
   },
 });

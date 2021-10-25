@@ -387,6 +387,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     } else {
       _opts.id = this._id.toString();
       _opts.body = serialModel;
+      // indexing log in-case of slow queries in elasticsearch
       return esClient.index(_opts as IndexDocumentParams<any>);
     }
   };
@@ -593,6 +594,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       }
     });
 
+    // search query for elasticsearch
     const res = await esClient.search(esQuery);
 
     const resp = reformatESTotalNumber(res);

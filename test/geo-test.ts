@@ -17,8 +17,8 @@ describe('GeoTest', async function () {
     await geoModel.deleteMany();
   });
 
-  it('should be able to create and store geo coordinates', async function () {
-    this.timeout(20000);
+  it('should be able to create and store geo coordinates 1', async function () {
+    this.timeout(10000);
     const geo = await geoModel.create({
       myId: 1,
       frame: {
@@ -30,6 +30,16 @@ describe('GeoTest', async function () {
       },
     });
 
+    // Mongodb request
+    const res = await geoModel.find({});
+
+    res.length.should.eql(1);
+    res[0].frame.type.should.eql('envelope');
+    res[0].frame.coordinates[0].should.eql([1, 4]);
+  });
+
+  it('should be able to create and store geo coordinates 2', async function () {
+    this.timeout(20000);
     const geo2 = await geoModel.create({
       myId: 2,
       frame: {
@@ -40,6 +50,7 @@ describe('GeoTest', async function () {
         ],
       },
     });
+
     // Mongodb request
     const res = await geoModel.find({});
 
@@ -51,7 +62,7 @@ describe('GeoTest', async function () {
 
   it('should be able to find geo coordinates in the indexes', async function () {
     // ES request
-    await sleep(1000);
+    await sleep(2000);
     const res = await geoModel.search(
       {
         match_all: {},
@@ -79,27 +90,31 @@ describe('GeoTest', async function () {
       count++;
     });
 
-    stream.on('close', async function () {
-      count.should.eql(2);
-
-      const res = await geoModel.search(
-        {
-          match_all: {},
-        },
-        {
-          sort: 'myId:asc',
-        }
-      );
-      res.hits.total.should.eql(2);
-      res.hits.hits[0]._source.frame.type.should.eql('envelope');
-      res.hits.hits[0]._source.frame.coordinates.should.eql([
-        [1, 4],
-        [3, 2],
-      ]);
+    return new Promise((resolve, reject) => {
+      stream.on('close', async function () {
+        count.should.eql(2);
+        await sleep(4000);
+        const res = await geoModel.search(
+          {
+            match_all: {},
+          },
+          {
+            sort: [{ myId: 'asc' }],
+          }
+        );
+        res.hits.total.should.eql(2);
+        res.hits.hits[0]._source.frame.type.should.eql('envelope');
+        res.hits.hits[0]._source.frame.coordinates.should.eql([
+          [1, 4],
+          [3, 2],
+        ]);
+        resolve();
+      });
     });
   });
 
   it('should be able to search points inside frames', async function () {
+    await sleep(2000);
     const geoQuery = {
       bool: {
         must: {
@@ -121,15 +136,16 @@ describe('GeoTest', async function () {
     const res1 = await geoModel.search(geoQuery);
     res1.hits.total.should.eql(1);
     res1.hits.hits[0]._source.myId.should.eql(2);
+    //
     geoQuery.bool.filter.geo_shape.frame.shape.coordinates = [1.5, 2.5];
     const res2 = await geoModel.search(geoQuery);
     res2.hits.total.should.eql(1);
     res2.hits.hits[0]._source.myId.should.eql(1);
-
+    //
     geoQuery.bool.filter.geo_shape.frame.shape.coordinates = [3, 2];
     const res3 = await geoModel.search(geoQuery);
     res3.hits.total.should.eql(2);
-
+    //
     geoQuery.bool.filter.geo_shape.frame.shape.coordinates = [0, 3];
     const res4 = await geoModel.search(geoQuery);
     res4.hits.total.should.eql(0);
