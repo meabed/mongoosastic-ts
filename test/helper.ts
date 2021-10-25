@@ -22,24 +22,6 @@ export async function deleteDocs(models: any) {
   }
 }
 
-export async function createModelAndEnsureIndex(model: any, obj: any) {
-  const doc = model.create(obj);
-  await sleep(200);
-  return doc;
-}
-
-export async function createModelAndSave(model: any, obj: any) {
-  const doc = model.create(obj);
-  await sleep(200);
-  return doc;
-}
-
-export async function saveAndWaitIndex(model: any) {
-  await model.save();
-  // model.once('es-indexed', cb);
-  // model.once('es-filtered', cb);
-}
-
 export function bookTitlesArray(): string[] {
   const books = ['American Gods', 'Gods of the Old World', 'American Gothic'];
   let idx;

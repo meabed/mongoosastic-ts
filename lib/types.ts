@@ -35,7 +35,7 @@ export interface MongoosasticOpts {
   saveOnSynchronize?: boolean;
   indexAutomatically?: boolean;
   forceIndexRefresh?: boolean;
-  customSerialize?: any;
+  customSerialize?: (doc?: any, mapping?: any) => any;
   customProperties?: any;
   routing?: any;
   transform: (doc: any, row: any) => any;

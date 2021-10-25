@@ -1,4 +1,4 @@
-import { createModelAndEnsureIndex, deleteIndexIfExists, sleep } from './helper';
+import { deleteIndexIfExists, sleep } from './helper';
 import { movieModel } from './models/movie';
 
 describe('Filter mode', async () => {
@@ -13,7 +13,7 @@ describe('Filter mode', async () => {
   });
 
   it('should index horror genre', async () => {
-    await createModelAndEnsureIndex(movieModel, {
+    await movieModel.create({
       title: 'LOTR',
       genre: 'horror',
     });
@@ -45,7 +45,7 @@ describe('Filter mode', async () => {
   });
 
   it('should unindex filtered models', async () => {
-    const movie = await createModelAndEnsureIndex(movieModel, {
+    const movie = await movieModel.create({
       title: 'REC',
       genre: 'horror',
     });

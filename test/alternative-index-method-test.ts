@@ -1,12 +1,12 @@
 import { tweetModel } from './models/tweet';
-import { createModelAndEnsureIndex, deleteIndexIfExists, sleep } from './helper';
+import { deleteIndexIfExists, sleep } from './helper';
 import { expect } from 'chai';
 
 describe('Index Method', async () => {
   before(async () => {
     await deleteIndexIfExists(['tweets', 'public_tweets']);
     await tweetModel.deleteMany();
-    await createModelAndEnsureIndex(tweetModel, {
+    await tweetModel.create({
       user: 'jamescarr',
       message: 'I know kung-fu!',
       post_date: new Date(),
