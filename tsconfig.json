@@ -22,7 +22,7 @@
     ]
   },
   "include": [
-    "index.ts"
+    "lib"
   ],
   "exclude": [
     "test",
