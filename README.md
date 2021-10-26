@@ -1,5 +1,5 @@
 # Mongoosastic-ts
-![Build Status](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci.yml/badge.svg)
+[![Build Status](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
 [![Coverage Status](https://coveralls.io/repos/meabed/mongoosastic-ts/badge.svg?branch=master&service=github)](https://coveralls.io/github/meabed/mongoosastic-ts?branch=master)
 [![Downloads](https://img.shields.io/npm/dm/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
