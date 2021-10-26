@@ -1,4 +1,4 @@
-Mongoosastic-ts
+mongoosastic-ts
 ============
 
 
