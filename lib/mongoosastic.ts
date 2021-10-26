@@ -240,7 +240,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     if (doc) {
       // todo check populate and fix constructor typing
-      // @ts-ignore
+      // @ts-expect-error ts-migrate(2351) FIXME: This expression is not constructable.
       _doc = new doc.constructor(doc);
       if (populate && populate.length) {
         const popDoc = await _doc.populate(populate);
@@ -581,7 +581,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     Object.keys(opts).forEach((opt) => {
       if (!opt.match(/(hydrate|sort|aggs|highlight|suggest)/) && opts.hasOwnProperty(opt)) {
-        // @ts-ignore
+        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         esQuery[opt] = opts[opt];
       }
 
