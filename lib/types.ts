@@ -58,7 +58,7 @@ export interface MongoosasticSchema<T> extends Schema<T> {
   statics: MongoosasticModel<any> & Schema<T>['statics'];
 }
 
-export interface MongoosasticOpts<T = any> {
+export interface MongoosasticPluginOpts<T = any> {
   log?: string;
   auth?: string;
   protocol?: string;

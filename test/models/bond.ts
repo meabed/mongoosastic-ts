@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -21,6 +21,6 @@ const BondSchema = new Schema<IBondModel>({
 BondSchema.plugin(mongoosastic, {
   index: 'bonds',
   type: 'bond',
-} as MongoosasticOpts<IBondModel>);
+} as MongoosasticPluginOpts<IBondModel>);
 
 export const bondModel = model<IBondModel, MongoosasticModel<IBondModel>>('Bond', BondSchema);

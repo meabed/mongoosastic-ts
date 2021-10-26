@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -44,7 +44,7 @@ PeopleSchema.plugin(mongoosastic, {
     sort: '-name',
     select: 'address name life',
   },
-} as MongoosasticOpts<IPeopleModel>);
+} as MongoosasticPluginOpts<IPeopleModel>);
 
 export const peopleModel = model<IPeopleModel, MongoosasticModel<IPeopleModel>>('People', PeopleSchema);
 
@@ -101,6 +101,6 @@ const DogSchema = new Schema<IDogModel>({
 
 DogSchema.plugin(mongoosastic, {
   indexAutomatically: false,
-} as MongoosasticOpts<IDogModel>);
+} as MongoosasticPluginOpts<IDogModel>);
 
 export const dogModel = model<IDogModel, MongoosasticModel<IDogModel>>('Dog', DogSchema);

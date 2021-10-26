@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -29,6 +29,6 @@ RepoSchema.plugin(mongoosastic, {
     data.license = repo.settingLicense || repo.detectedLicense;
     return data;
   },
-} as MongoosasticOpts<IRepoModel>);
+} as MongoosasticPluginOpts<IRepoModel>);
 
 export const repoModel = model<IRepoModel, MongoosasticModel<IRepoModel>>('Repo', RepoSchema);

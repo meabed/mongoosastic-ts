@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -16,6 +16,6 @@ const TextSchema = new Schema<ITextModel>({
 TextSchema.plugin(mongoosastic, {
   index: 'texts',
   type: 'text',
-} as MongoosasticOpts<ITextModel>);
+} as MongoosasticPluginOpts<ITextModel>);
 
 export const textModel = model<ITextModel, MongoosasticModel<ITextModel>>('Text', TextSchema);

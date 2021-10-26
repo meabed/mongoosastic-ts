@@ -6,7 +6,7 @@ import {
   IMongoosasticSearchOpts,
   MongoosasticBulkIndexOpts,
   MongoosasticModel,
-  MongoosasticOpts,
+  MongoosasticPluginOpts,
   MongoosasticSchema,
 } from './types';
 import { Model, Query, Schema } from 'mongoose';
@@ -19,7 +19,7 @@ function isStringArray(arr: any) {
   return arr.filter && arr.length === arr.filter((item: any) => typeof item === 'string').length;
 }
 
-function createEsClient(options: MongoosasticOpts) {
+function createEsClient(options: MongoosasticPluginOpts) {
   const esOptions: ConfigOptions = {};
 
   if (Array.isArray(options.hosts)) {
@@ -192,8 +192,8 @@ async function deleteByMongoId(options: any) {
     });
 }
 
-export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: MongoosasticOpts) {
-  const options = pluginOpts || ({} as MongoosasticOpts);
+export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: MongoosasticPluginOpts) {
+  const options = pluginOpts || ({} as MongoosasticPluginOpts);
 
   let bulkTimeout: any;
   let bulkBuffer: any = [];

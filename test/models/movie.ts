@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -30,6 +30,6 @@ MovieSchema.plugin(mongoosastic, {
   filter: function (self) {
     return self.genre === 'action';
   },
-} as MongoosasticOpts);
+} as MongoosasticPluginOpts);
 
 export const movieModel = model<IMovieModel, MongoosasticModel<IMovieModel>>('Movie', MovieSchema);

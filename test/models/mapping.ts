@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -28,6 +28,6 @@ const MappingSchema = new Schema<IMappingModel>({
 MappingSchema.plugin(mongoosastic, {
   index: 'mappings',
   type: 'mapping',
-} as MongoosasticOpts<IMappingModel>);
+} as MongoosasticPluginOpts<IMappingModel>);
 
 export const mappingModel = model<IMappingModel, MongoosasticModel<IMappingModel>>('Mapping', MappingSchema);

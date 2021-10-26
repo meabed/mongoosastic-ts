@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -28,6 +28,6 @@ TaskSchema.plugin(mongoosastic, {
     }
     return json;
   },
-} as MongoosasticOpts<ITaskModel>);
+} as MongoosasticPluginOpts<ITaskModel>);
 
 export const taskModel = model<ITaskModel, MongoosasticModel<ITaskModel>>('Task', TaskSchema);

@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -28,6 +28,6 @@ BulkSchema.plugin(mongoosastic, {
     size: 2,
     delay: 100,
   },
-} as MongoosasticOpts);
+} as MongoosasticPluginOpts);
 
 export const bulkModel = model<IBulkModel, MongoosasticModel<IBulkModel>>('Bulk', BulkSchema);

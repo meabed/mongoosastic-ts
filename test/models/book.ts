@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -17,7 +17,7 @@ const BookSchema = new Schema<IBookModel>({
 BookSchema.plugin(mongoosastic, {
   index: 'books',
   type: 'book',
-} as MongoosasticOpts);
+} as MongoosasticPluginOpts);
 
 export let bookModelSaveCounter = 0;
 

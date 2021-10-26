@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -26,6 +26,6 @@ PhoneSchema.plugin(mongoosastic, {
       type: 'date',
     },
   },
-} as MongoosasticOpts<IPhoneModel>);
+} as MongoosasticPluginOpts<IPhoneModel>);
 
 export const phoneModel = model<IPhoneModel, MongoosasticModel<IPhoneModel>>('Phone', PhoneSchema);

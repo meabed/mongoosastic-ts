@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -40,6 +40,6 @@ export const PersonSchema = new Schema<IPersonModel>({
 PersonSchema.plugin(mongoosastic, {
   index: 'persons',
   type: 'person',
-} as MongoosasticOpts<IPersonModel>);
+} as MongoosasticPluginOpts<IPersonModel>);
 
 export const personModel = model<IPersonModel, MongoosasticModel<IPersonModel>>('Person', PersonSchema);

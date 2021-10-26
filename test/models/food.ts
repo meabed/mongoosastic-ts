@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticOpts } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 
 import { mongoosastic } from '../../lib/mongoosastic';
 
@@ -25,6 +25,6 @@ FoodSchema.plugin(mongoosastic, {
     delete data._id;
     return data;
   },
-} as MongoosasticOpts);
+} as MongoosasticPluginOpts);
 
 export const foodModel = model<IFoodModel, MongoosasticModel<IFoodModel>>('Food', FoodSchema);
