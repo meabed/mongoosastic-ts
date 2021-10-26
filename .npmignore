@@ -16,3 +16,5 @@ example
 docs
 .github
 lib
+.nyc_output
+.idea

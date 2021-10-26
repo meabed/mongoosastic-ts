@@ -7,7 +7,7 @@ export type MongoosasticNestedOpts = Record<
   string | boolean | number | Record<string, string | boolean | number>
 >;
 
-export interface IMongoosasticSearchParam {
+export interface IMongoosasticSearchParams {
   sort?: Record<string, any>;
   bool?: Record<string, any>;
   match_phrase?: Record<string, any>;
@@ -32,8 +32,8 @@ export interface IMongoosasticSearchOpts {
 }
 
 export interface MongoosasticModel<T> extends Model<T> {
-  esSearch: (params: IMongoosasticSearchParam, opt?: IMongoosasticSearchOpts) => Promise<any>;
-  search: (params: IMongoosasticSearchParam, opt?: IMongoosasticSearchOpts) => Promise<any>;
+  esSearch: (params: IMongoosasticSearchParams, opt?: IMongoosasticSearchOpts) => Promise<any>;
+  search: (params: IMongoosasticSearchParams, opt?: IMongoosasticSearchOpts) => Promise<any>;
   createMapping: (settings?: any, mappings?: any) => Promise<any>;
   synchronize: (params?: any, opt?: any) => EventEmitter;
   esTruncate: (opt?: MongoosasticNestedOpts) => Promise<any>;
