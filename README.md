@@ -47,15 +47,12 @@ export const bookModel = model<IBookModel, MongoosasticModel<IBookModel>>('Book'
 
 3. Query your Elasticsearch with the `search()` method (added by the plugin)
 
-```javascript
-bookModel.search({
+```typescript
+const results = await bookModel.search({
   query_string: {
     query: "john"
-  }
-}, function(err, results) {
-  // results here
 });
-
+// do something with elastic search results
 ```
 
 *NOTE*: You can also query Elasticsearch with any other method. Example: 
