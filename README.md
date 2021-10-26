@@ -1,47 +1,54 @@
+# Mongoosastic-ts
+![Build Status](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci.yml/badge.svg)
+[![NPM version](https://img.shields.io/npm/v/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
+[![Coverage Status](https://coveralls.io/repos/meabed/mongoosastic-ts/badge.svg?branch=master&service=github)](https://coveralls.io/github/meabed/mongoosastic-ts?branch=master)
+[![Downloads](https://img.shields.io/npm/dm/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
 
-# LOOKING FOR MAINTAINERS
-
-This project is looking for contributors/maintainers. Please check [issue #457](https://github.com/mongoosastic/mongoosastic/issues/457). If you, or anyone you know, work with Mongoose and/or ElasticSearch please let them know that we'd appreciate any help. Thanks!
-
-
-# Mongoosastic
-[![Build Status](https://travis-ci.org/mongoosastic/mongoosastic.svg?branch=master)](https://travis-ci.org/mongoosastic/mongoosastic)
-[![NPM version](https://img.shields.io/npm/v/mongoosastic.svg)](https://www.npmjs.com/package/mongoosastic)
-[![Coverage Status](https://coveralls.io/repos/mongoosastic/mongoosastic/badge.svg?branch=master&service=github)](https://coveralls.io/github/mongoosastic/mongoosastic?branch=master)
-[![Downloads](https://img.shields.io/npm/dm/mongoosastic.svg)](https://www.npmjs.com/package/mongoosastic)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mongoosastic/mongoosastic?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-Mongoosastic is a [mongoose](http://mongoosejs.com/) plugin that can automatically index your models into [elasticsearch](https://www.elastic.co/).
-
+### mongoosastic-ts is a [mongoose](http://mongoosejs.com/) plugin that can automatically index your models into [elasticsearch](https://www.elastic.co/).
+> This package is forked version from [mongoosastic](https://github.com/mongoosastic/mongoosastic)
+> 
+> It has been updated and migrated to typescript and updated dependencies and codebase to the latest packages 
 
 ## Getting started
 
 1. Install the package
 
 ```bash
-npm install -S mongoosastic
+npm install -S mongoosastic-ts
 ```
 
 2. Setup your mongoose model to use the plugin
 
-```javascript
-var mongoose     = require('mongoose')
-  , mongoosastic = require('mongoosastic')
-  , Schema       = mongoose.Schema
+```typescript
+import { Document, model, Schema } from 'mongoose';
+import { mongoosastic } from 'mongoosastic-ts';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from 'mongoosastic-ts/dist/types';
 
-var User = new Schema({
-    name: String
-  , email: String
-  , city: String
-})
+export interface IBookModel extends Document, MongoosasticDocument {
+  title?: string;
+}
 
-User.plugin(mongoosastic)
+const BookSchema = new Schema<IBookModel>({
+  title: {
+    type: String,
+    required: true,
+  },
+});
+
+BookSchema.plugin(mongoosastic, {
+  index: 'books',
+  type: 'book',
+} as MongoosasticPluginOpts);
+
+
+export const bookModel = model<IBookModel, MongoosasticModel<IBookModel>>('Book', BookSchema);
 ```
+
 
 3. Query your Elasticsearch with the `search()` method (added by the plugin)
 
 ```javascript
-User.search({
+bookModel.search({
   query_string: {
     query: "john"
   }
