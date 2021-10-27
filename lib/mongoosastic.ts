@@ -275,7 +275,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     // Return because we need the doc being indexed
     // Before we start inserting
-    if (instruction.index && instruction.index._index) {
+    if (instruction?.index && instruction?.index._index) {
       return;
     }
 
