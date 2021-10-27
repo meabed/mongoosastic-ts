@@ -1,9 +1,22 @@
+5.0.4 2021-10-27
+==========
+ * Fix: conditional if transform return empty 
+
+5.0.2 2021-10-27
+==========
+ * Adding .npmignore and remove extra docs from npm package 
+
+5.0.1 2021-10-25
+==========
+ * Update readme and documentation
+ * Enhance types
+
 5.0.0 2021-10-25
 ==========
- * Update all dependencies
- * Migrate the lib to typescript
- * Migrate tests to typescript
- * Github CI integration
+* Update all dependencies
+* Migrate the lib to typescript
+* Migrate tests to typescript
+* Github CI integration
 
 4.5.0 2019-06-15
 ==========
