@@ -67,7 +67,7 @@
   "lint-staged": {
     "lib/*.{ts,tsx,js,jsx}": "prettier --write",
     "test/*.{ts,tsx,js,jsx}": "prettier --write",
-    "docs/**": "prettier --write"
+    "docs/**": "prettier --write",
     "examples/**": "prettier --write"
   }
 }
