@@ -6,3 +6,4 @@ coverage
 *.swp
 .nyc_output/
 dist
+yarn-error.log
