@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",
-    "@types/elasticsearch": "5.0.38",
+    "@types/elasticsearch": "5.0.40",
     "@types/eslint": "7.28.2",
     "@types/expect": "^24.3.0",
     "@types/lodash.clonedeep": "4.5.6",
