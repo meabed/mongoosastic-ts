@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/chai": "4.2.22",
     "@types/elasticsearch": "5.0.40",
-    "@types/eslint": "7.29.0",
+    "@types/eslint": "8.2.0",
     "@types/expect": "24.3.0",
     "@types/lodash.clonedeep": "4.5.6",
     "@types/mocha": "9.0.0",
