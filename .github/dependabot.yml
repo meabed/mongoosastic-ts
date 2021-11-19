@@ -10,7 +10,7 @@ updates:
     commit-message:
       prefix: 'chore'
       include: 'scope'
-    target-branch: 'develop'
+    target-branch: 'master'
 
   - package-ecosystem: 'docker'
     directory: '/'
@@ -21,7 +21,7 @@ updates:
     commit-message:
       prefix: 'chore'
       include: 'scope'
-    target-branch: 'develop'
+    target-branch: 'master'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
