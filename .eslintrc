@@ -3,7 +3,6 @@
     "node": true,
     "mocha": true
   },
-  "extends": "standard",
   "rules": {
     "space-before-function-paren": "off",
     "no-unreachable-loop": "off",

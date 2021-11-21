@@ -12,15 +12,21 @@
   "types": "dist/mongoosastic.d.ts",
   "scripts": {
     "authors": "./scripts/update_authors.sh",
+    "build": "rm -rf dist && tsc -p . --skipLibCheck",
     "changelog": "changelog mongoosastic/mongoosastic latest -m",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "build": "rm -rf dist && tsc -p . --skipLibCheck",
     "lint": "eslint lib test",
-    "lint-fix": "npm run lint -- --fix",
+    "lint-fix": "yarn lint -- --fix",
     "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
+    "prepare": "yarn husky install",
     "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha",
-    "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha",
-    "prepare": "yarn husky install"
+    "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha"
+  },
+  "lint-staged": {
+    "lib/*.{ts,tsx,js,jsx}": "prettier --write",
+    "test/*.{ts,tsx,js,jsx}": "prettier --write",
+    "docs/**": "prettier --write",
+    "examples/**": "prettier --write"
   },
   "dependencies": {
     "elasticsearch": "16.7.2",
@@ -40,7 +46,6 @@
     "co-mocha": "1.2.2",
     "coveralls": "3.1.1",
     "eslint": "8.3.0",
-    "eslint-config-standard": "16.0.3",
     "eslint-plugin-promise": "5.1.1",
     "husky": "7.0.4",
     "lint-staged": "12.1.1",
@@ -63,11 +68,5 @@
     "elastic search",
     "mongoose",
     "full text search"
-  ],
-  "lint-staged": {
-    "lib/*.{ts,tsx,js,jsx}": "prettier --write",
-    "test/*.{ts,tsx,js,jsx}": "prettier --write",
-    "docs/**": "prettier --write",
-    "examples/**": "prettier --write"
-  }
+  ]
 }

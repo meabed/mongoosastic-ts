@@ -65,4 +65,4 @@ jobs:
 
       - name: Test
         run: |
-          npm run test-ci
+          yarn test-ci

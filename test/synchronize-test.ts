@@ -73,6 +73,8 @@ describe('Synchronize', () => {
         count++;
       });
 
+      await sleep(2000);
+
       return await new Promise((resolve, reject) => {
         stream.on('close', async () => {
           count.should.eql(53);
