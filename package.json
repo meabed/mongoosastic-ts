@@ -33,7 +33,7 @@
     "lodash.clonedeep": "4.5.0"
   },
   "devDependencies": {
-    "@types/chai": "4.2.22",
+    "@types/chai": "4.3.0",
     "@types/elasticsearch": "5.0.40",
     "@types/eslint": "8.2.1",
     "@types/expect": "24.3.0",
