@@ -675,10 +675,10 @@ mongodb@4.2.1:
   optionalDependencies:
     saslprep "^1.0.3"
 
-mongoosastic-ts@5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/mongoosastic-ts/-/mongoosastic-ts-5.0.4.tgz#7669c4c6ec227bb1a5c99f1e58a0c48e8500451e"
-  integrity sha512-NfLonzx4NuiJ92KVCatqxx1V5EP9ugv77cd1ntVFLtVsmtQU8+a96s0Z0QrPHC93oHVbvmELXbpgI/tgHtGGmQ==
+mongoosastic-ts@5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/mongoosastic-ts/-/mongoosastic-ts-5.0.5.tgz#d9c6df18002a6f023846b14771f0d725f96aa6b8"
+  integrity sha512-Rc+mtnuAyeNgSX6FArX7V8A2WhiD3FUFR8YZG63MVc4h11JAyoHqUr2pRWBgHM9AkvhT0/M6FZ3B5oz9CVQFZA==
   dependencies:
     elasticsearch "16.7.2"
     lodash.clonedeep "4.5.0"
