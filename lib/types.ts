@@ -29,6 +29,8 @@ export interface IMongoosasticSearchOpts {
   hydrate?: boolean;
   hydrateWithESResults?: { source?: boolean };
   hydrateOptions?: { lean?: boolean; sort?: string; select?: string };
+  from?: number;
+  size?: number;
 }
 
 export interface MongoosasticModel<T> extends Model<T> {

@@ -6,7 +6,7 @@
     "start": "ts-node --transpile-only app.ts"
   },
   "dependencies": {
-    "body-parser": "1.19.0",
+    "body-parser": "1.19.1",
     "errorhandler": "1.5.1",
     "express": "4.17.1",
     "jade": "1.11.0",
