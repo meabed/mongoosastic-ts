@@ -2,18 +2,32 @@
   "assigneesFromCodeOwners": true,
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
       "automerge": true,
-      "approvals_required": false,
-      "labels": ["dependencies"]
+      "approvals_required": 0,
+      "labels": [
+        "dependencies"
+      ]
     },
     {
-      "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["dependencies", "breaking"]
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dependencies",
+        "breaking"
+      ]
     }
   ]
 }
