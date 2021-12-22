@@ -1,9 +1,19 @@
 {
-  "extends": [
-    "config:base"
-  ],
-  "groupName": "all",
-  "ignorePaths": [
-    "examples"
+  "assigneesFromCodeOwners": true,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "automerge": true,
+      "approvals_required": false,
+      "labels": ["dependencies"]
+    },
+    {
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "breaking"]
+    }
   ]
 }

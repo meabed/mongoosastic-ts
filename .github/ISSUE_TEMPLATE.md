@@ -1,7 +1,7 @@
 <!--- Provide a general summary of the issue in the Title above -->
 
 ## Your Environments
-- mongoosastic version: x.y.z
+- mongoosastic-ts version: x.y.z
 - node version: x.y.z
 - mongoose version: x.y.z
 - elasticsearch version: x.y.z
