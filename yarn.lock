@@ -391,6 +391,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.7.tgz#36820945061326978c42a01e56b61cd223dfdc42"
   integrity sha512-QB5D2sqfSjCmTuWcBWyJ+/44bcjO7VbjSbOE0ucoVbAsSNQc4Lt6QkgkVXkTDwkL4z/beecZNDvVX15D4P8Jbw==
 
+"@types/node@< 17.0.6":
+  version "17.0.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.5.tgz#57ca67ec4e57ad9e4ef5a6bab48a15387a1c83e0"
+  integrity sha512-w3mrvNXLeDYV1GKTZorGJQivK6XLCoGwpnyJFbJVK/aTBQUxOCaa/GlFAAN3OTDFcb7h5tiFG+YXCO2By+riZw==
+
 "@types/prettier@2.4.2":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.4.2.tgz#4c62fae93eb479660c3bd93f9d24d561597a8281"
@@ -2501,10 +2506,10 @@ lilconfig@2.0.4:
   resolved "https://registry.yarnpkg.com/lilconfig/-/lilconfig-2.0.4.tgz#f4507d043d7058b380b6a8f5cb7bcd4b34cee082"
   integrity sha512-bfTIN7lEsiooCocSISTWXkiWJkRqtL9wYtYy+8EK3Y41qh3mpwPU0ycTOgjdY9ErwXCc8QyrQp82bdL0Xkm9yA==
 
-lint-staged@12.1.4:
-  version "12.1.4"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.1.4.tgz#a92ec8509f13018caaafade61d515c2d5873316e"
-  integrity sha512-RgDz9nsFsE0/5eL9Vat0AvCuk0+j5mEuzBIVfrRH5FRtt5wibYe8zTjZs2nuqLFrLAGQGYnj8+HJxolcj08i/A==
+lint-staged@12.1.5:
+  version "12.1.5"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.1.5.tgz#e05582fc39aed5cb13b9dd1dfb8330407246d809"
+  integrity sha512-WyKb+0sNKDTd1LwwAfTBPp0XmdaKkAOEbg4oHE4Kq2+oQVchg/VAcjVQtSqZih1izNsTURjc2EkhG/syRQUXdA==
   dependencies:
     cli-truncate "^3.1.0"
     colorette "^2.0.16"
@@ -2765,11 +2770,12 @@ mongodb@4.2.2:
   optionalDependencies:
     saslprep "^1.0.3"
 
-mongoose@6.1.4:
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.1.4.tgz#a414e64c849fae3ced99348e9de73f986c9f0551"
-  integrity sha512-RsNiMpGWo7OXFmq5xt0ZWYt2rabHLxNYr0oAiR0xDv23lHKCkXDqyDl71+sXF9rcWEe8BTHG+1IRQykiNBvaKQ==
+mongoose@6.1.5:
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.1.5.tgz#2d249748e358ff4f3c6107d2a922c54aacb73d0a"
+  integrity sha512-0rRxTBoqMSuQF/YM3TEvbHn8Ybnd9dRjD7DItEjCXK0vwC/muLKXZ4rVCN4KAnWQAkwYzoWw2tXAy0YF6TUdEg==
   dependencies:
+    "@types/node" "< 17.0.6"
     bson "^4.2.2"
     kareem "2.3.3"
     mongodb "4.2.2"
