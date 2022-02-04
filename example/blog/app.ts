@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import errorhandler from 'errorhandler';
 import mongoose, { model, Schema } from 'mongoose';
 import { mongoosastic } from 'mongoosastic-ts';
-import { MongoosasticModel } from '../../dist/types';
+import { MongoosasticModel } from 'mongoosastic-ts/dist/types';
 
 const app = express();
 

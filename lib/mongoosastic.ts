@@ -170,7 +170,7 @@ async function deleteByMongoId(options: any) {
   const client: EsClient = options.client;
   const model = options.model;
   const routing = options.routing;
-  let tries = options.tries;
+  const tries = options.tries;
 
   return client
     .delete({
@@ -350,13 +350,13 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
   schema.methods.index = async function schemaIndex(inOpts: any = {}) {
     let serialModel;
-    let opts = inOpts;
+    const opts = inOpts;
 
     if (filter && filter(this)) {
       return this.unIndex();
     }
 
-    setIndexNameIfUnset(this.constructor.modelName);
+    setIndexNameIfUnset(this.constructor['modelName']);
 
     const index = opts.index || indexName;
 
@@ -396,7 +396,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
    * Unset elasticsearch index
    */
   schema.methods.unIndex = async function unIndex(inOpts: any = {}) {
-    setIndexNameIfUnset(this.constructor.modelName);
+    setIndexNameIfUnset(this.constructor['modelName']);
 
     inOpts.index = inOpts.index || indexName;
     inOpts.type = inOpts.type || typeName;
@@ -524,7 +524,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
    * Wrapping schema.statics.es_search().
    */
   schema.statics.search = async function search(inQuery: any, inOpts: any) {
-    let opts = inOpts;
+    const opts = inOpts;
     const query = inQuery === null ? undefined : inQuery;
 
     const fullQuery = {
@@ -546,8 +546,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
    * @param inOpts - (optional) special search options, such as hydrate
    */
   schema.statics.esSearch = async function (inQuery: any, inOpts: IMongoosasticSearchOpts) {
-    const _this = this;
-    let opts = inOpts ?? ({} as IMongoosasticSearchOpts);
+    const opts = inOpts ?? ({} as IMongoosasticSearchOpts);
     const query = inQuery === null ? undefined : inQuery;
 
     opts.hydrateOptions = opts?.hydrateOptions || defaultHydrateOptions || {};
@@ -581,7 +580,6 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     Object.keys(opts).forEach((opt) => {
       if (!opt.match(/(hydrate|sort|aggs|highlight|suggest)/) && opts.hasOwnProperty(opt)) {
-        // @ts-expect-error ts-migrate(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         esQuery[opt] = opts[opt];
       }
 
@@ -599,7 +597,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     const resp = reformatESTotalNumber(res);
     if (alwaysHydrate || opts.hydrate) {
-      return hydrate(resp, _this, opts);
+      return hydrate(resp, this, opts);
     }
     return resp;
   };

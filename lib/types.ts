@@ -76,7 +76,9 @@ export interface MongoosasticPluginOpts<T = any> {
   routing?: (document: LeanDocument<T>) => any;
   transform: (
     json: LeanDocument<T> & Record<string | number, any>,
-    document: Document<Types.ObjectId, any, T> & Omit<LeanDocument<T>, '_id'>
+    document:
+      | (Document<Types.ObjectId, any, T> & Omit<LeanDocument<T>, '_id'>)
+      | { [p: string]: any; [p: number]: any; [p: symbol]: any }
   ) => any;
   filter: (doc: any) => any;
   bulk: {

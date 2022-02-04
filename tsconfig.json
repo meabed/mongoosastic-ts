@@ -10,7 +10,7 @@
     "noImplicitThis": true,
     "esModuleInterop": true,
     "alwaysStrict": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "sourceMap": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
