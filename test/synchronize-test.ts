@@ -73,7 +73,7 @@ describe('Synchronize', () => {
         count++;
       });
 
-      await sleep(2000);
+      await sleep(3000);
 
       return await new Promise((resolve, reject) => {
         stream.on('close', async () => {
