@@ -41,7 +41,7 @@ jobs:
       - name: Runs Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: 7.15.1
+          stack-version: 7.17.9
 
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
