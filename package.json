@@ -1,6 +1,6 @@
 {
   "name": "mongoosastic-ts",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "A mongoose plugin that indexes models into elastic search",
   "repository": {
     "type": "git",
