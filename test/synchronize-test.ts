@@ -74,8 +74,8 @@ describe('Synchronize', () => {
       });
 
       return await new Promise(async (resolve, reject) => {
-        await sleep(4000);
         stream.on('close', async () => {
+          await sleep(4000);
           count.should.eql(53);
           bookModelSaveCounter.should.eql(count);
 
@@ -85,7 +85,7 @@ describe('Synchronize', () => {
             },
           });
           results.hits.total.should.eql(2);
-          resolve();
+          return resolve();
         });
       });
     });
