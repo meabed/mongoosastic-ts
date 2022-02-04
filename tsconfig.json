@@ -17,16 +17,8 @@
     "declarationDir": "./dist",
     "declaration": true,
     "baseUrl": ".",
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": [
-    "lib"
-  ],
-  "exclude": [
-    "test",
-    "dist",
-    "node_modules"
-  ]
+  "include": ["lib"],
+  "exclude": ["test", "dist", "node_modules"]
 }
