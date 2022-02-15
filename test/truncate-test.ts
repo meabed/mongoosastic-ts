@@ -43,7 +43,6 @@ describe('Truncate', async function () {
 
       const props = res.tasks.mappings.properties;
       expect(props.random.type).to.be.eql('text');
-      expect(props.random.boost).to.be.eql(2.0);
 
       const searchRes = await taskModel.search({
         match_all: {},

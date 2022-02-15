@@ -56,7 +56,6 @@ describe('Bulk mode', async function () {
 
     const props = res.bulks.mappings.properties;
     expect(props.random.type).to.be.eql('keyword');
-    expect(props.random.boost).to.be.eql(2.0);
   });
 
   it('should be able to index documents after truncate', async function () {

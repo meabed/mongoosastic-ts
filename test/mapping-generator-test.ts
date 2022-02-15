@@ -397,19 +397,6 @@ describe('MappingGenerator', async function () {
       mapping.properties.name.type.should.eql('date');
     });
 
-    it('adds the boost field', async function () {
-      const schema = new Schema({
-        name: {
-          type: String,
-          es_boost: 2.2,
-        },
-      });
-
-      const mapping = Generator.generateMapping(schema);
-
-      mapping.properties.name.boost.should.eql(2.2);
-    });
-
     it('respects schemas with explicit es_indexes', async function () {
       const schema = new Schema({
         implicit_field_1: {

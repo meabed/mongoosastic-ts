@@ -15,7 +15,7 @@ export interface ICommentModel extends Document, MongoosasticDocument {
 const CommentSchema = new Schema<ICommentModel>({
   title: String,
   user: String,
-  random: { type: Number, es_type: 'keyword', es_boost: 2.0 },
+  random: { type: Number, es_type: 'keyword' },
   userId: Number,
   post_date: Date,
   message: String,

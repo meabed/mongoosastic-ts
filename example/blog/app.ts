@@ -25,7 +25,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/silly-blog', function (err) {
 });
 
 const BlogPostSchema = new Schema({
-  title: { type: String, es_boost: 2.0 },
+  title: { type: String },
   content: { type: String },
 });
 

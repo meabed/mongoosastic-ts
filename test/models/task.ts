@@ -12,7 +12,7 @@ const TaskSchema = new Schema<ITaskModel>({
   content: {
     type: String,
   },
-  random: { type: Number, es_type: 'string', es_boost: 2.0 },
+  random: { type: Number, es_type: 'string' },
 });
 
 TaskSchema.plugin(mongoosastic, {

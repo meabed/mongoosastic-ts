@@ -15,7 +15,6 @@ export interface IBlogModel extends Document, MongoosasticDocument {
 const BlogSchema = new Schema<IBlogModel>({
   title: {
     type: String,
-    es_boost: 2.0,
   },
   user: String,
   rank: Number,
