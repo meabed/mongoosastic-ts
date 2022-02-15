@@ -1,5 +1,3 @@
-import { Client as EsClient, ConfigOptions, IndexDocumentParams, SearchParams } from 'elasticsearch';
-import events from 'events';
 import { Generator } from './mapping-generator';
 import { serialize } from './serialize';
 import {
@@ -9,6 +7,8 @@ import {
   MongoosasticPluginOpts,
   MongoosasticSchema,
 } from './types';
+import { ConfigOptions, Client as EsClient, IndexDocumentParams, SearchParams } from 'elasticsearch';
+import events from 'events';
 import { Model, Query, Schema } from 'mongoose';
 
 function isString(subject: any) {

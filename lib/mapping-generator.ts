@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
+
 //
 // Get type from the mongoose schema
 //
@@ -141,7 +142,7 @@ function getMapping(cleanTree: { [x: string]: any; hasOwnProperty?: any }, inPre
 // @return the tree
 //
 function getCleanTree(
-  tree: { [x: string]: {} },
+  tree: Record<string, any>,
   paths: {
     [x: string]: {
       instance: string;

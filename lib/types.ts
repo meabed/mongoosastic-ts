@@ -1,6 +1,6 @@
-import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
 import { Client, IndexDocumentParams } from 'elasticsearch';
 import { EventEmitter } from 'events';
+import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
 
 export type MongoosasticNestedOpts = Record<
   string,

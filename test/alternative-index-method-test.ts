@@ -1,5 +1,5 @@
-import { tweetModel } from './models/tweet';
 import { deleteIndexIfExists, sleep } from './helper';
+import { tweetModel } from './models/tweet';
 import { expect } from 'chai';
 
 describe('Index Method', async function () {

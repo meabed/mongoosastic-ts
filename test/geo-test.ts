@@ -1,5 +1,5 @@
-import { geoModel } from './models/geo';
 import { deleteIndexIfExists, getEsClient, sleep } from './helper';
+import { geoModel } from './models/geo';
 
 describe('GeoTest', async function () {
   before(async function () {

@@ -1,6 +1,6 @@
 import { Generator } from '../lib/mapping-generator';
-import { bowlingBallModel, personModel, PersonSchema } from './models/person';
 import { serialize } from '../lib/serialize';
+import { PersonSchema, bowlingBallModel, personModel } from './models/person';
 
 const mapping = Generator.generateMapping(PersonSchema);
 

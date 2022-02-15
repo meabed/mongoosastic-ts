@@ -1,6 +1,6 @@
 import { deleteIndexIfExists, sleep } from './helper';
-import { taskModel } from './models/task';
 import { repoModel } from './models/repo';
+import { taskModel } from './models/task';
 
 describe('Transform mode', async function () {
   before(async function () {

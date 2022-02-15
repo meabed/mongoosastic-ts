@@ -1,6 +1,6 @@
-import { ITweetModel, tweetModel } from './models/tweet';
-import { bumModel, dogModel, peopleModel, talkModel } from './models/people';
 import { deleteIndexIfExists, getEsClient, sleep } from './helper';
+import { bumModel, dogModel, peopleModel, talkModel } from './models/people';
+import { ITweetModel, tweetModel } from './models/tweet';
 import should from 'should';
 
 describe('indexing', async function () {

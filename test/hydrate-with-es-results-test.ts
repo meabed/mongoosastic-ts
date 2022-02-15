@@ -1,5 +1,5 @@
-import { textModel } from './models/text';
 import { deleteIndexIfExists, sleep } from './helper';
+import { textModel } from './models/text';
 
 describe('Hydrate with ES data', async function () {
   before(async function () {

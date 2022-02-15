@@ -1,6 +1,6 @@
-import { bookModel, bookModelSaveCounter, setBookModelSaveCounter } from './models/book';
-import { deleteIndexIfExists, sleep } from './helper';
 import { bookTitlesArray } from './bulk-test';
+import { deleteIndexIfExists, sleep } from './helper';
+import { bookModel, bookModelSaveCounter, setBookModelSaveCounter } from './models/book';
 
 const clearData = async () => {
   await bookModel.deleteMany();

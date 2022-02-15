@@ -1,7 +1,6 @@
-import { Document, model, Schema } from 'mongoose';
-import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
-
 import { mongoosastic } from '../../lib/mongoosastic';
+import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
+import { Document, Schema, model } from 'mongoose';
 
 export interface IBlogModel extends Document, MongoosasticDocument {
   title?: string;

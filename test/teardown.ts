@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import { closeEsClient } from './helper';
+import mongoose from 'mongoose';
 
 after(async function () {
   await mongoose.disconnect();

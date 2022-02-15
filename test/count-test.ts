@@ -1,5 +1,5 @@
-import { commentModel } from './models/comment';
 import { deleteIndexIfExists, sleep } from './helper';
+import { commentModel } from './models/comment';
 
 describe('Count', async function () {
   before(async function () {

@@ -1,5 +1,5 @@
-import { blogModel } from './models/blog';
 import { deleteIndexIfExists, sleep } from './helper';
+import { blogModel } from './models/blog';
 
 describe('Hydrate with ES data', async function () {
   before(async function () {

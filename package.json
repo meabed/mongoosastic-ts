@@ -19,6 +19,7 @@
     "lint-fix": "yarn lint -- --fix",
     "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
     "prepare": "yarn husky install",
+    "prettier": "prettier --write \"lib/**/*.{ts,tsx,js,jsx}\" \"test/**/*.{ts,tsx,js,jsx}\"",
     "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha",
     "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha"
   },
@@ -33,6 +34,7 @@
     "lodash.clonedeep": "4.5.0"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/chai": "4.3.0",
     "@types/elasticsearch": "5.0.40",
     "@types/eslint": "8.4.1",

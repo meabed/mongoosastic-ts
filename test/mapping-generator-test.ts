@@ -1,9 +1,8 @@
 import { Generator } from '../lib/mapping-generator';
-
+import { deleteIndexIfExists, sleep } from './helper';
+import { mappingModel } from './models/mapping';
 import { Schema, Types } from 'mongoose';
 import should from 'should';
-import { mappingModel } from './models/mapping';
-import { deleteIndexIfExists, sleep } from './helper';
 
 describe('MappingGenerator', async function () {
   describe('type mapping', async function () {

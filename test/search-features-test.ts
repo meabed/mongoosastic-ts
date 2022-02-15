@@ -1,5 +1,5 @@
-import { bondModel } from './models/bond';
 import { deleteIndexIfExists, sleep } from './helper';
+import { bondModel } from './models/bond';
 import { expect } from 'chai';
 
 describe('Query DSL', async function () {
