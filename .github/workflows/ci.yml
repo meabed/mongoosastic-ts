@@ -6,15 +6,12 @@ on:
       - 'test/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'yarn.lock'
     branches:
       - '*'
       - 'develop'
       - 'stage'
       - 'master'
-
-env:
-  GH_PAT: ${{ secrets.GH_PAT }}
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
