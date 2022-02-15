@@ -1,9 +1,9 @@
-import express from 'express';
 import bodyParser from 'body-parser';
 import errorhandler from 'errorhandler';
-import mongoose, { model, Schema } from 'mongoose';
+import express from 'express';
 import { mongoosastic } from 'mongoosastic-ts';
 import { MongoosasticModel } from 'mongoosastic-ts/dist/types';
+import mongoose, { Schema, model } from 'mongoose';
 
 const app = express();
 
