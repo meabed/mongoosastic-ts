@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        es-version: [ 6.8.23, 7.17.0, 8.0.0 ]
+        es-version: [7.17.0, 8.0.0]
 
     services:
       mongodb:
