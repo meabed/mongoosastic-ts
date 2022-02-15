@@ -20,9 +20,9 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     timeout-minutes: 20
-    #    strategy:
-    #      matrix:
-    #        node-version: [ 14.x, 17.x ]
+    strategy:
+      matrix:
+        es-version: [ 6.8.23, 7.17.0, 8.0.0 ]
 
     services:
       mongodb:
@@ -41,7 +41,7 @@ jobs:
       - name: Runs Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: 8.0.0
+          stack-version: ${{ matrix.es-version }}
 
       - uses: styfle/cancel-workflow-action@0.9.1
         with:

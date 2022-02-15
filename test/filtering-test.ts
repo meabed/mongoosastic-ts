@@ -49,7 +49,7 @@ describe('Filter mode', async function () {
       title: 'REC',
       genre: 'horror',
     });
-    await sleep(1400);
+    await sleep(3000);
     const results = await movieModel.search({
       term: {
         title: 'rec',
