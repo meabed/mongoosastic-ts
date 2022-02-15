@@ -1,3 +1,13 @@
+6.0.0 2022-02-16
+==========
+* Breaking change: support [elasticsearch 8.x](https://www.elastic.co/guide/en/elasticsearch/reference/8.0/migrating-8.0.html) and removing es_boost 
+
+5.0.7 2022-02-04
+==========
+ * Chore: update dependencies
+ * Chore: linting and formatting
+ * Chore: general improvements
+ 
 5.0.4 2021-10-27
 ==========
  * Fix: conditional if transform return empty 
