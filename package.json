@@ -29,7 +29,7 @@
     "examples/**": "prettier --write"
   },
   "dependencies": {
-    "elasticsearch": "16.7.2",
+    "elasticsearch": "16.7.3",
     "lodash.clonedeep": "4.5.0"
   },
   "devDependencies": {
