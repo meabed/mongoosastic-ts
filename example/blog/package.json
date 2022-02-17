@@ -6,12 +6,12 @@
     "start": "ts-node --transpile-only app.ts"
   },
   "dependencies": {
-    "body-parser": "1.19.1",
+    "body-parser": "1.19.2",
     "errorhandler": "1.5.1",
-    "express": "4.17.2",
+    "express": "4.17.3",
     "jade": "1.11.0",
     "mongoosastic-ts": "5.0.7",
-    "mongoose": "6.2.1"
+    "mongoose": "6.2.2"
   },
   "devDependencies": {
     "@types/body-parser": "1.19.2",
