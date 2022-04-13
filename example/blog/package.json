@@ -11,7 +11,7 @@
     "express": "4.17.3",
     "jade": "1.11.0",
     "mongoosastic-ts": "5.0.7",
-    "mongoose": "6.2.10"
+    "mongoose": "6.2.11"
   },
   "devDependencies": {
     "@types/body-parser": "1.19.2",
