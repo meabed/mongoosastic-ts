@@ -45,7 +45,6 @@ jobs:
         with:
           stack-version: ${{ matrix.es-version }}
 
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 30
