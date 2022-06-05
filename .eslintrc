@@ -1,7 +1,11 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "extends": ["plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
   "env": {
     "node": true,
     "mocha": true
@@ -19,6 +23,7 @@
     "array-callback-return": "off",
     "multiline-ternary": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "prefer-spread": "off"
+    "prefer-spread": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

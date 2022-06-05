@@ -226,7 +226,9 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
   const saveOnSynchronize = !(options && options.saveOnSynchronize === false);
   const bulkErrEm = new events.EventEmitter();
   const esClient = options.esClient ?? createEsClient(options);
-  let { index: indexName, type: typeName, bulk, esVersion = '8.2.2' } = options;
+  let { index: indexName, type: typeName, bulk } = options;
+
+  const { esVersion = '8' } = options;
 
   function setIndexNameIfUnset(model) {
     const modelName = model.toLowerCase();

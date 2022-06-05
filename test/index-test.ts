@@ -207,7 +207,7 @@ describe('indexing', async function () {
       // behavior here is to try 3 times and then give up.
       const tweet: ITweetModel = new tweetModel();
       const opts = { tries: 2 };
-      let triggerRemoved = false;
+      const triggerRemoved = false;
       //
       // await tweetModel.on('es-removed', function (err, res) {
       //   triggerRemoved = true;

@@ -36,7 +36,7 @@ describe('Synchronize', () => {
       stream.on('error', () => {
         errorCount += 1;
       });
-      return await new Promise((resolve, reject) => {
+      return await new Promise((resolve) => {
         stream.on('close', async () => {
           await sleep(1000);
           count.should.eql(53);
@@ -73,7 +73,7 @@ describe('Synchronize', () => {
         count++;
       });
 
-      return await new Promise(async (resolve, reject) => {
+      return await new Promise(async (resolve) => {
         stream.on('close', async () => {
           await sleep(4000);
           count.should.eql(53);
@@ -99,7 +99,7 @@ describe('Synchronize', () => {
         if (doc._id) count++;
       });
 
-      return await new Promise((resolve, reject) => {
+      return await new Promise((resolve) => {
         stream.on('close', async () => {
           count.should.eql(53);
           bookModelSaveCounter.should.eql(0);
