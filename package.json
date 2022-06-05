@@ -2,6 +2,19 @@
   "name": "mongoosastic-ts",
   "version": "6.0.0",
   "description": "A mongoose plugin that indexes models into elastic search",
+  "keywords": [
+    "mongoose-sync-elasticsearch",
+    "elasticsearch-sync",
+    "elasticsearch",
+    "mongoose",
+    "mongodb",
+    "search",
+    "plugin",
+    "mongoose-elasticsearch",
+    "mongoose-elasticsearch-plugin",
+    "typescript",
+    "mongoose-elasticsearch-nodejs"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/meabed/mongoosastic-ts"
