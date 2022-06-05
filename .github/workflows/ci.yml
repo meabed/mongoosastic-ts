@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        es-version: [7.17.0, 8.0.0]
+        es-version: [7.17.0, 8.0.0, 8.2.2]
 
     services:
       mongodb:
@@ -28,6 +28,11 @@ jobs:
           - 27017:27017
 
     steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          workflow_id: build-docker.yml
+          access_token: ${{ github.token }}
+
       - name: Configure sysctl limits
         run: |
           sudo swapoff -a
@@ -40,10 +45,6 @@ jobs:
         with:
           stack-version: ${{ matrix.es-version }}
 
-      - uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          workflow_id: build-docker.yml
-          access_token: ${{ github.token }}
 
       - uses: actions/checkout@v3
         with:

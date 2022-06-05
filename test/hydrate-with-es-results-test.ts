@@ -75,7 +75,7 @@ describe('Hydrate with ES data', async function () {
         model.should.have.property('_esResult');
         model._esResult.should.have.property('_index');
         model._esResult._index.should.eql('texts');
-        model._esResult.should.have.property('_type');
+        // model._esResult.should.have.property('_type'); // deprecated
         // model._esResult._type.should.eql('esresulttext')  -- deprecated _type in ES 7.x
         model._esResult.should.have.property('_id');
         model._esResult.should.have.property('_score');
@@ -107,7 +107,7 @@ describe('Hydrate with ES data', async function () {
         model.should.have.property('_esResult');
         model._esResult.should.have.property('_index');
         model._esResult._index.should.eql('texts');
-        model._esResult.should.have.property('_type');
+        // model._esResult.should.have.property('_type'); -- deprecated _type in ES 7.x
         // model._esResult._type.should.eql('esresulttext') -- deprecated _type in ES 7.x
         model._esResult.should.have.property('_id');
         model._esResult.should.have.property('_score');

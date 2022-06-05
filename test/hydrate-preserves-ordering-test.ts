@@ -1,23 +1,23 @@
 import { deleteIndexIfExists, sleep } from './helper';
-import { blogModel } from './models/blog';
+import { rankModel } from './models/rank';
 
-describe('Hydrate with ES data', async function () {
+describe('Hydrate with ES data Ordered', async function () {
   before(async function () {
-    await blogModel.deleteMany();
+    await rankModel.deleteMany();
     await deleteIndexIfExists(['ranks']);
-    await blogModel.create({
+    await rankModel.create({
       title: 'The colour of magic',
       rank: 2,
     });
-    await blogModel.create({
+    await rankModel.create({
       title: 'The Light Fantastic',
       rank: 4,
     });
-    await blogModel.create({
+    await rankModel.create({
       title: 'Equal Rites',
       rank: 0,
     });
-    await blogModel.create({
+    await rankModel.create({
       title: 'MorzartEstLà',
       rank: -10.4,
     });
@@ -25,13 +25,13 @@ describe('Hydrate with ES data', async function () {
   });
 
   after(async function () {
-    await blogModel.deleteMany();
+    await rankModel.deleteMany();
     await deleteIndexIfExists(['ranks']);
   });
 
   describe('Preserve ordering from MongoDB on hydration', async function () {
     it("should return an array of objects ordered 'desc' by MongoDB", async function () {
-      const res = await blogModel.esSearch(
+      const res = await rankModel.esSearch(
         {},
         {
           hydrate: true,
@@ -49,7 +49,7 @@ describe('Hydrate with ES data', async function () {
 
   describe('Preserve ordering from MongoDB on hydration', async function () {
     it("should return an array of objects ordered 'asc' by MongoDB", async function () {
-      const res = await blogModel.esSearch(
+      const res = await rankModel.esSearch(
         {},
         {
           hydrate: true,
@@ -67,7 +67,7 @@ describe('Hydrate with ES data', async function () {
 
   describe('Preserve ordering from ElasticSearch on hydration', async function () {
     it("should return an array of objects ordered 'desc' by ES", async function () {
-      const res = await blogModel.esSearch(
+      const res = await rankModel.esSearch(
         {
           sort: [
             {
@@ -92,7 +92,7 @@ describe('Hydrate with ES data', async function () {
 
   describe('Preserve ordering from ElasticSearch on hydration', async function () {
     it("should return an array of objects ordered 'asc' by ES", async function () {
-      const res = await blogModel.esSearch(
+      const res = await rankModel.esSearch(
         {
           sort: [
             {

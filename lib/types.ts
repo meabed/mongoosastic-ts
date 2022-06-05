@@ -52,7 +52,7 @@ export interface MongoosasticDocument {
 }
 
 export interface MongoosasticBulkIndexOpts extends Partial<IndexDocumentParams<any>> {
-  model?: any;
+  model: any;
   _id?: string;
 }
 
@@ -68,6 +68,8 @@ export interface MongoosasticPluginOpts<T = any> {
   host?: string;
   hosts?: string[];
   esClient?: Client;
+  esVersion?: string;
+  keepAlive?: boolean;
   saveOnSynchronize?: boolean;
   indexAutomatically?: boolean;
   forceIndexRefresh?: boolean;

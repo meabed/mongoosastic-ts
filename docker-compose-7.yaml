@@ -1,7 +1,7 @@
 version: '3'
 services:
-  elasticsearch:
-    container_name: elasticsearchc
+  elasticsearch7:
+    container_name: elasticsearchc7
     deploy:
       resources:
         limits:
@@ -10,8 +10,6 @@ services:
       - node.name=es
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
       - 'ES_JAVA_OPTS=-Xms512m -Xmx1024m'
     ulimits:
       memlock:
@@ -19,7 +17,7 @@ services:
         hard: -1
     volumes:
       - /usr/share/elasticsearch/data
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     ports:
       - '9200:9200'
 

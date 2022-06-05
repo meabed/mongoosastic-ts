@@ -57,7 +57,7 @@ describe('Filter mode', async function () {
     });
 
     results.hits.total.should.eql(1);
-
+    movie.title = 'REC2';
     movie.genre = 'action';
     await movie.save();
     await sleep(1400);

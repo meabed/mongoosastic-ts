@@ -11,7 +11,7 @@ import { ConfigOptions, Client as EsClient, IndexDocumentParams, SearchParams } 
 import events from 'events';
 import { Model, Query, Schema } from 'mongoose';
 
-function isString(subject: any) {
+function isString(subject: unknown) {
   return typeof subject === 'string';
 }
 
@@ -22,19 +22,28 @@ function isStringArray(arr: any) {
 function createEsClient(options: MongoosasticPluginOpts) {
   const esOptions: ConfigOptions = {};
 
-  if (Array.isArray(options.hosts)) {
-    esOptions.host = options.hosts;
+  const {
+    host = 'localhost',
+    port = 9200,
+    protocol = 'http',
+    auth = null,
+    keepAlive = false,
+    hosts,
+    log = null,
+  } = options;
+  if (Array.isArray(hosts)) {
+    esOptions.host = hosts;
   } else {
     esOptions.host = {
-      host: options && options.host ? options.host : 'localhost',
-      port: options && options.port ? options.port : 9200,
-      protocol: options && options.protocol ? options.protocol : 'http',
-      auth: options && options.auth ? options.auth : null,
-      keepAlive: false,
+      host,
+      port,
+      protocol,
+      auth,
+      keepAlive,
     };
   }
 
-  esOptions.log = options ? options.log : null;
+  esOptions.log = log;
 
   return new EsClient(esOptions);
 }
@@ -89,7 +98,7 @@ async function createMappingIfNotPresent(options: {
 
   if (exists) {
     return await client.indices.putMapping({
-      type: undefined, // deprecated
+      type: undefined, // deprecated -- use esVersion 7.x
       index: indexName,
       body: inputMapping,
     });
@@ -165,17 +174,20 @@ async function hydrate(res: any, model: any, options: any) {
   return res;
 }
 
-async function deleteByMongoId(options: any) {
-  const index = options.index;
-  const client: EsClient = options.client;
-  const model = options.model;
-  const routing = options.routing;
-  const tries = options.tries;
+type DeleteOpts = {
+  index: string;
+  client: EsClient;
+  model: any;
+  routing?: string;
+  tries?: number;
+};
 
+async function deleteByMongoId(options: DeleteOpts) {
+  const { index, client, model, tries = 0, routing } = options;
   return client
     .delete({
       maxRetries: tries,
-      type: '_doc',
+      type: undefined, // deprecated -- use esVersion 7.x
       index: index,
       id: model._id.toString(),
       routing: routing,
@@ -214,9 +226,9 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
   const saveOnSynchronize = !(options && options.saveOnSynchronize === false);
   const bulkErrEm = new events.EventEmitter();
   const esClient = options.esClient ?? createEsClient(options);
-  let { index: indexName, type: typeName, bulk } = options;
+  let { index: indexName, type: typeName, bulk, esVersion = '8.2.2' } = options;
 
-  function setIndexNameIfUnset(model: any) {
+  function setIndexNameIfUnset(model) {
     const modelName = model.toLowerCase();
     if (!indexName) {
       indexName = `${modelName}s`;
@@ -246,10 +258,10 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
         const popDoc = await _doc.populate(populate);
         popDoc
           .index()
-          .then((res: any) => {
+          .then((res) => {
             onIndex(undefined, res);
           })
-          .catch((e: any) => {
+          .catch((e) => {
             onIndex(e, undefined);
           });
       } else {
@@ -275,22 +287,22 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     // Return because we need the doc being indexed
     // Before we start inserting
-    if (instruction?.index && instruction?.index._index) {
+    if (instruction?.index?._index) {
       return;
     }
 
-    if (bulkBuffer.length >= ((bulk && bulk.size) || 1000)) {
+    if (bulkBuffer.length >= (bulk?.size || 1000)) {
       await schema.statics.flush();
       clearBulkTimeout();
     } else if (bulkTimeout === undefined) {
       bulkTimeout = setTimeout(async () => {
         await schema.statics.flush();
         clearBulkTimeout();
-      }, (bulk && bulk.delay) || 1000);
+      }, bulk?.delay || 1000);
     }
   }
 
-  async function bulkDelete(opts: any) {
+  async function bulkDelete(opts: { index?: string; routing?: string; model: any }) {
     return await bulkAdd({
       delete: {
         _index: opts.index || indexName,
@@ -300,7 +312,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     });
   }
 
-  async function bulkIndex(opts: any) {
+  async function bulkIndex(opts: { index?: string; routing?: string; model: any; _id?: string }) {
     await bulkAdd({
       index: {
         _index: opts.index || indexName,
@@ -372,6 +384,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     if (transform) serialModel = transform(serialModel, this);
 
     const _opts: MongoosasticBulkIndexOpts = {
+      model: undefined,
       index: index,
       refresh: forceIndexRefresh,
     };
@@ -651,7 +664,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       return;
     }
 
-    const opts: Record<string, any> = {
+    const opts: DeleteOpts = {
       index: indexName,
       tries: 3,
       model: doc,

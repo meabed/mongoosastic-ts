@@ -17,8 +17,8 @@ const GeoSchema = new Schema<IGeoModel>({
     geo_shape: {
       type: String,
       es_type: 'geo_shape',
-      es_tree: 'quadtree',
-      es_precision: '10km',
+      // es_tree: 'quadtree', // deprecated https://www.elastic.co/guide/en/elasticsearch/reference/7.17/breaking-changes-7.0.html
+      // es_precision: '10km', // deprecated https://www.elastic.co/guide/en/elasticsearch/reference/7.17/breaking-changes-7.0.html
     },
   },
 });

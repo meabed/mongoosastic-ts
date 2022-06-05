@@ -1,8 +1,13 @@
-# 6.0.0 2022-02-16
+# 6.0.0 2022-06-05
 
-- Breaking change: support [elasticsearch 8.x](https://www.elastic.co/guide/en/elasticsearch/reference/8.0/migrating-8.0.html) and removing es_boost
+- Breaking change:
+  - support [elasticsearch 8.x](https://www.elastic.co/guide/en/elasticsearch/reference/8.0/migrating-8.0.html) and removing es_boost
+  - [Elasticsearch 7 deprecation](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/breaking-changes-7.0.html)
+- Fix tests
+- Fix breaking changes for _type, geo_shape
 
-  # 5.0.7 2022-02-04
+
+# 5.0.7 2022-02-04
 
 - Chore: update dependencies
 - Chore: linting and formatting
