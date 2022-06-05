@@ -1,8 +1,9 @@
 # mongoosastic-ts
 
-[![Build Status](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci.yml)
+[![Build Status 7](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-7.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-7.yml)
+[![Build Status 8.0](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-0.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-0.yml)
+[![Build Status 8.2](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-2.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-2.yml)
 [![NPM version](https://img.shields.io/npm/v/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
-[![Coverage Status](https://coveralls.io/repos/meabed/mongoosastic-ts/badge.svg?branch=master&service=github)](https://coveralls.io/github/meabed/mongoosastic-ts?branch=master)
 [![Downloads](https://img.shields.io/npm/dm/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
 
 ### mongoosastic-ts is a [mongoose](http://mongoosejs.com/) plugin that can automatically index your models into [elasticsearch](https://www.elastic.co/).
