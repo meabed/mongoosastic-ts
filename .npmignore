@@ -21,3 +21,4 @@ lib
 .husky
 .mocharc.js
 docker-compose.yaml
+docker-compose-7.yaml
