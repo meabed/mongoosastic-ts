@@ -6,15 +6,15 @@
 [![NPM version](https://img.shields.io/npm/v/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
 [![Downloads](https://img.shields.io/npm/dm/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
 
-### mongoosastic-ts is a [mongoose](http://mongoosejs.com/) plugin that can automatically index your models into [elasticsearch](https://www.elastic.co/).
+#### mongoosastic-ts is a [mongoose](http://mongoosejs.com/) plugin that can automatically index your models into [elasticsearch](https://www.elastic.co/).
 
 > This package is forked version from [mongoosastic](https://github.com/mongoosastic/mongoosastic)
 >
 > It has been updated and migrated to typescript and updated dependencies and codebase to the latest packages
 
-### Support elasticsearch 7.x and 8.x
+#### Support elasticsearch 7.x and 8.x
 
-## Getting started
+### Getting started
 
 1. Install the package
 
@@ -64,6 +64,6 @@ _NOTE_: You can also query Elasticsearch with any other method. Example:
 curl http://localhost:9200/users/user/_search
 ```
 
-## Documentation
+### Documentation
 
 [View docs](docs/README.md)
