@@ -1,4 +1,4 @@
-name: CI
+name: CI ES 8.2
 on:
   push:
     paths:
