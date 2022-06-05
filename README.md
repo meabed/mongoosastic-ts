@@ -9,6 +9,8 @@
 > 
 > It has been updated and migrated to typescript and updated dependencies and codebase to the latest packages 
 
+### Support elasticsearch 7.x and 8.x
+
 ## Getting started
 
 1. Install the package

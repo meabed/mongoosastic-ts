@@ -17,9 +17,6 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     timeout-minutes: 20
-    strategy:
-      matrix:
-        es-version: [7.17.0, 8.0.0, 8.2.2]
 
     services:
       mongodb:
@@ -30,7 +27,7 @@ jobs:
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
-          workflow_id: build-docker.yml
+          workflow_id: ci-8-2.yml
           access_token: ${{ github.token }}
 
       - name: Configure sysctl limits
@@ -43,7 +40,7 @@ jobs:
       - name: Runs Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: ${{ matrix.es-version }}
+          stack-version: 8.2.2
 
       - uses: actions/checkout@v3
         with:
