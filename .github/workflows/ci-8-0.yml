@@ -41,6 +41,7 @@ jobs:
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
           stack-version: 8.0.0
+          security-enabled: false
 
       - uses: actions/checkout@v3
         with:

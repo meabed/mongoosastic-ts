@@ -1,5 +1,5 @@
 import { mongoosastic } from '../../lib/mongoosastic';
-import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
 import { Document, Schema, model } from 'mongoose';
 
 export interface IBlogModel extends Document, MongoosasticDocument {
@@ -30,6 +30,7 @@ const BlogSchema = new Schema<IBlogModel>({
 BlogSchema.plugin(mongoosastic, {
   index: 'blogs',
   type: 'blog',
-});
+  log: 'trace',
+} as MongoosasticPluginOpts<IBlogModel>);
 
 export const blogModel = model<IBlogModel, MongoosasticModel<IBlogModel>>('Blog', BlogSchema);
