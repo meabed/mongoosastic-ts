@@ -47,7 +47,7 @@
     "lodash.clonedeep": "4.5.0"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "3.2.0",
+    "@trivago/prettier-plugin-sort-imports": "3.3.0",
     "@types/chai": "4.3.1",
     "@types/elasticsearch": "5.0.40",
     "@types/eslint": "8.4.5",
