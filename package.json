@@ -50,7 +50,7 @@
     "@trivago/prettier-plugin-sort-imports": "3.4.0",
     "@types/chai": "4.3.3",
     "@types/elasticsearch": "5.0.40",
-    "@types/eslint": "8.4.7",
+    "@types/eslint": "8.4.8",
     "@types/eslint-plugin-prettier": "3.1.0",
     "@types/expect": "24.3.0",
     "@types/lodash.clonedeep": "4.5.7",
