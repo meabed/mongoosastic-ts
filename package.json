@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "3.4.0",
-    "@types/chai": "4.3.3",
+    "@types/chai": "4.3.4",
     "@types/elasticsearch": "5.0.40",
     "@types/eslint": "8.4.10",
     "@types/eslint-plugin-prettier": "3.1.0",
