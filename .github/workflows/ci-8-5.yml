@@ -10,8 +10,6 @@ on:
       - 'package-lock.json'
       - 'yarn.lock'
       - 'release.config.js'
-    branches:
-      - '**'
 
 env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
