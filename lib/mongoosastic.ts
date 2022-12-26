@@ -80,6 +80,7 @@ async function createMappingIfNotPresent(options: {
 
   if (!mappings) {
     completeMapping[typeName] = Generator.generateMapping(schema);
+    console.log('completeMapping', typeName, completeMapping[typeName]);
     completeMapping[typeName].properties = filterMappingFromMixed(completeMapping[typeName].properties);
     if (properties) {
       Object.keys(properties).map((key) => {

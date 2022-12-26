@@ -366,7 +366,6 @@ describe('MappingGenerator', async function () {
       // instead, Elastic should "guess" and set default mapping
 
       const mapping = await mappingModel.createMapping();
-      console.log('mapping', mapping);
       const doc = await mappingModel.create({
         string: 'test_string',
         mixed_field: 'mixed',
