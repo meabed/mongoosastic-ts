@@ -1,5 +1,7 @@
 name: CI ES 8.5
 on:
+  workflow_dispatch:
+  workflow_call:
   push:
     paths:
       - 'lib/**'
