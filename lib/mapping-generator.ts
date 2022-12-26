@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash.clonedeep';
-
 //
 // Get type from the mongoose schema
 //
@@ -25,11 +23,11 @@ function getTypeFromPaths(
 ) {
   let type: boolean | string = false;
 
-  if (paths[field] && paths[field].options.type === Date) {
+  if (paths?.[field]?.options?.type === Date) {
     return 'date';
   }
 
-  if (paths[field] && paths[field].options.type === Boolean) {
+  if (paths?.[field]?.options?.type === Boolean) {
     return 'boolean';
   }
 
@@ -49,7 +47,7 @@ function getTypeFromPaths(
 // @param inPrefix
 // @return the mapping
 //
-function getMapping(cleanTree: { [x: string]: any; hasOwnProperty?: any }, inPrefix: string) {
+function getMapping(cleanTree: object, inPrefix: string) {
   const mapping: any = {};
   const implicitFields = [];
   let hasEsIndex = false;
@@ -147,7 +145,7 @@ function getCleanTree(
     [x: string]: {
       instance: string;
       options?: {
-        type?: any;
+        type?: string;
         es_select?: string;
         es_schema: { paths?: any; tree?: any; es_select?: string };
         instance?: string;
@@ -193,14 +191,9 @@ function getCleanTree(
             cleanTree[field][prop] = value[prop];
           }
         }
-      } else if (
-        paths[field] &&
-        paths[field].options.es_schema &&
-        paths[field].options.es_schema.tree &&
-        paths[field].options.es_schema.paths
-      ) {
+      } else if (paths?.[field]?.options?.es_schema?.tree && paths?.[field]?.options?.es_schema?.paths) {
         const subTree = paths[field].options.es_schema.tree;
-        if (paths[field].options.es_select) {
+        if (paths?.[field]?.options?.es_select) {
           for (const treeNode in subTree) {
             if (!subTree.hasOwnProperty(treeNode)) {
               continue;

@@ -20,7 +20,18 @@
     "url": "git://github.com/meabed/mongoosastic-ts"
   },
   "license": "MIT",
-  "author": "Mohamed Meabed <mo.meabed@gmail.com> (https://meabed.com)",
+  "author": {
+    "name": "Mohamed Meabed",
+    "email": "mo@meabed.com",
+    "url": "https://meabed.com"
+  },
+  "maintainers": [
+    {
+      "name": "Mohamed Meabed",
+      "email": "mo@meabed.com",
+      "url": "https://meabed.com"
+    }
+  ],
   "main": "dist/mongoosastic.js",
   "types": "dist/mongoosastic.d.ts",
   "scripts": {
@@ -43,19 +54,14 @@
     "examples/**": "prettier --write"
   },
   "dependencies": {
-    "elasticsearch": "16.7.3",
-    "lodash.clonedeep": "4.5.0"
+    "elasticsearch": "16.7.3"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.0.0",
     "@types/chai": "4.3.4",
     "@types/elasticsearch": "5.0.40",
-    "@types/eslint": "8.4.10",
-    "@types/eslint-plugin-prettier": "3.1.0",
     "@types/expect": "24.3.0",
-    "@types/lodash.clonedeep": "4.5.7",
     "@types/mocha": "10.0.1",
-    "@types/prettier": "2.7.2",
     "@types/should": "13.0.0",
     "@typescript-eslint/eslint-plugin": "5.47.0",
     "@typescript-eslint/parser": "5.47.0",
