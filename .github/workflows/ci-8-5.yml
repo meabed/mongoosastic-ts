@@ -10,6 +10,7 @@ on:
       - 'package-lock.json'
       - 'yarn.lock'
       - 'release.config.js'
+      - '.github/workflows/ci-8-5.yml'
     branches:
       - '*'
 
