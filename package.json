@@ -1,6 +1,6 @@
 {
   "name": "mongoosastic-ts",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "A mongoose plugin that indexes models into elastic search",
   "keywords": [
     "mongoose-sync-elasticsearch",
