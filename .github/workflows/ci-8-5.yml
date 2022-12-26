@@ -59,3 +59,8 @@ jobs:
       - name: Test
         run: |
           yarn test-ci
+
+      - name: Release
+        run: |
+          npm i -g semantic-release @semantic-release/git @semantic-release/github
+          npx semantic-release --no-ci --debug
