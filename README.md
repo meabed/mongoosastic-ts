@@ -3,8 +3,10 @@
 [![Build Status 7](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-7.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-7.yml)
 [![Build Status 8.0](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-0.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-0.yml)
 [![Build Status 8.2](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-2.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-2.yml)
+[![Build Status 8.2](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-5.yml/badge.svg)](https://github.com/meabed/mongoosastic-ts/actions/workflows/ci-8-5.yml)
 [![NPM version](https://img.shields.io/npm/v/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
 [![Downloads](https://img.shields.io/npm/dm/mongoosastic-ts.svg)](https://www.npmjs.com/package/mongoosastic-ts)
+[![UNPKG](https://img.shields.io/badge/UNPKG-OK-179BD7.svg)](https://unpkg.com/browse/mongoosastic-ts@latest/)
 
 #### mongoosastic-ts is a [mongoose](http://mongoosejs.com/) plugin that can automatically index your models into [elasticsearch](https://www.elastic.co/).
 
