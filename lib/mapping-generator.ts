@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash.clonedeep';
-
 //
 // Get type from the mongoose schema
 //
@@ -25,16 +23,20 @@ function getTypeFromPaths(
 ) {
   let type: boolean | string = false;
 
-  if (paths[field] && paths[field].options.type === Date) {
+  if (paths?.[field]?.options?.type === Date) {
     return 'date';
   }
 
-  if (paths[field] && paths[field].options.type === Boolean) {
+  if (paths?.[field]?.options?.type === Boolean) {
     return 'boolean';
   }
 
   if (paths[field]) {
     type = !!paths[field].instance ? paths[field].instance.toLowerCase() : 'object';
+  }
+
+  if (type === 'array') {
+    type = 'mixed';
   }
 
   return type;
@@ -49,7 +51,7 @@ function getTypeFromPaths(
 // @param inPrefix
 // @return the mapping
 //
-function getMapping(cleanTree: { [x: string]: any; hasOwnProperty?: any }, inPrefix: string) {
+function getMapping(cleanTree: object, inPrefix: string) {
   const mapping: any = {};
   const implicitFields = [];
   let hasEsIndex = false;
@@ -147,7 +149,7 @@ function getCleanTree(
     [x: string]: {
       instance: string;
       options?: {
-        type?: any;
+        type?: string;
         es_select?: string;
         es_schema: { paths?: any; tree?: any; es_select?: string };
         instance?: string;
@@ -162,8 +164,8 @@ function getCleanTree(
   let geoFound = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
 
-  tree = cloneDeep(tree);
-  paths = cloneDeep(paths);
+  tree = Object.assign({}, tree);
+  paths = Object.assign({}, paths);
 
   for (const field in tree) {
     if (prefix === '' && field === '_id' && isRoot) {
@@ -193,14 +195,9 @@ function getCleanTree(
             cleanTree[field][prop] = value[prop];
           }
         }
-      } else if (
-        paths[field] &&
-        paths[field].options.es_schema &&
-        paths[field].options.es_schema.tree &&
-        paths[field].options.es_schema.paths
-      ) {
+      } else if (paths?.[field]?.options?.es_schema?.tree && paths?.[field]?.options?.es_schema?.paths) {
         const subTree = paths[field].options.es_schema.tree;
-        if (paths[field].options.es_select) {
+        if (paths?.[field]?.options?.es_select) {
           for (const treeNode in subTree) {
             if (!subTree.hasOwnProperty(treeNode)) {
               continue;
@@ -287,19 +284,11 @@ function nestedSchema(
   prefix: string
 ) {
   // A nested array can contain complex objects
-  if (
-    paths[prefix + field] &&
-    paths[prefix + field].schema &&
-    paths[prefix + field].schema.tree &&
-    paths[prefix + field].schema.paths
-  ) {
+  if (paths[prefix + field]?.schema?.tree && paths[prefix + field]?.schema?.paths) {
     cleanTree[field] = getCleanTree(paths[prefix + field].schema.tree, paths[prefix + field].schema.paths, '');
   } else if (
-    paths[prefix + field] &&
-    Array.isArray(paths[prefix + field].options.type) &&
-    paths[prefix + field].options.type[0].es_schema &&
-    paths[prefix + field].options.type[0].es_schema.tree &&
-    paths[prefix + field].options.type[0].es_schema.paths
+    paths[prefix + field]?.options?.type?.[0].es_schema?.tree &&
+    paths[prefix + field]?.options?.type?.[0]?.es_schema?.paths
   ) {
     // A nested array of references filtered by the 'es_select' option
     const subTree = paths[field].options.type[0].es_schema.tree;

@@ -1,4 +1,4 @@
-name: CI ES 7.x
+name: CI ES 8.5
 on:
   workflow_dispatch:
   workflow_call:
@@ -9,6 +9,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'yarn.lock'
+      - 'release.config.js'
     branches:
       - '*'
 
@@ -32,7 +33,7 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - uses: styfle/cancel-workflow-action@0.11.0
         with:
-          workflow_id: ci-7.yml
+          workflow_id: ci-8-5.yml
           access_token: ${{ github.token }}
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Configure sysctl limits
@@ -45,7 +46,8 @@ jobs:
       - name: Runs Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: 7.17.0
+          stack-version: 8.5.3
+          security-enabled: false
 
       - uses: actions/checkout@v3
         with:
@@ -57,3 +59,8 @@ jobs:
       - name: Test
         run: |
           yarn test-ci
+
+      - name: Release
+        run: |
+          npm i -g semantic-release @semantic-release/git @semantic-release/github
+          npx semantic-release --no-ci --debug

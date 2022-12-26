@@ -104,7 +104,7 @@ describe('MappingGenerator', async function () {
       mapping.properties.contact.properties.telephone.type.should.eql('text');
     });
 
-    it('recognizes an object and handles explict es_indexed', async function () {
+    it('recognizes an object and handles explicit es_indexed', async function () {
       const schema = new Schema({
         name: {
           type: String,
@@ -133,7 +133,7 @@ describe('MappingGenerator', async function () {
       mapping.properties.contact.properties.should.not.have.property('keys');
     });
 
-    it('recognizes a nested schema and handles explict es_indexed', async function () {
+    it('recognizes a nested schema and handles explicit es_indexed', async function () {
       const ContactSchema = new Schema({
         email: {
           type: String,
