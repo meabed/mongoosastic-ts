@@ -35,6 +35,10 @@ function getTypeFromPaths(
     type = !!paths[field].instance ? paths[field].instance.toLowerCase() : 'object';
   }
 
+  if (type === 'array') {
+    type = 'mixed';
+  }
+
   return type;
 }
 
@@ -283,8 +287,8 @@ function nestedSchema(
   if (paths[prefix + field]?.schema?.tree && paths[prefix + field]?.schema?.paths) {
     cleanTree[field] = getCleanTree(paths[prefix + field].schema.tree, paths[prefix + field].schema.paths, '');
   } else if (
-    paths[prefix + field].options.type?.[0].es_schema?.tree &&
-    paths[prefix + field].options.type?.[0]?.es_schema?.paths
+    paths[prefix + field]?.options?.type?.[0].es_schema?.tree &&
+    paths[prefix + field]?.options?.type?.[0]?.es_schema?.paths
   ) {
     // A nested array of references filtered by the 'es_select' option
     const subTree = paths[field].options.type[0].es_schema.tree;
