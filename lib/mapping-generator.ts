@@ -162,8 +162,10 @@ function getCleanTree(
   let geoFound = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
 
-  tree = cloneDeep(tree);
-  paths = cloneDeep(paths);
+  // tree = cloneDeep(tree);
+  tree = JSON.parse(JSON.stringify(tree));
+  // paths = cloneDeep(paths);
+  paths = JSON.parse(JSON.stringify(paths));
 
   for (const field in tree) {
     if (prefix === '' && field === '_id' && isRoot) {
