@@ -1,4 +1,4 @@
-name: CI ES 8.0
+name: CI ES 8.5
 on:
   push:
     paths:
@@ -7,6 +7,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'yarn.lock'
+      - 'release.config.js'
     branches:
       - '*'
 
@@ -30,7 +31,7 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - uses: styfle/cancel-workflow-action@0.11.0
         with:
-          workflow_id: ci-8-0.yml
+          workflow_id: ci-8-5.yml
           access_token: ${{ github.token }}
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Configure sysctl limits
@@ -43,7 +44,7 @@ jobs:
       - name: Runs Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: 8.0.0
+          stack-version: 8.5.3
           security-enabled: false
 
       - uses: actions/checkout@v3
