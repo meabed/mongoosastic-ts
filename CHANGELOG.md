@@ -1,3 +1,9 @@
+# 6.0.1 2022-12-25
+
+- Fix tests
+- Update libs
+- Remove clone deep
+
 # 6.0.0 2022-06-05
 
 - Breaking change:
