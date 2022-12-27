@@ -19,9 +19,6 @@
     "baseUrl": ".",
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "__tests__", "dist", "node_modules"]
+  "include": ["src"],
+  "exclude": ["__tests__", "dist", "node_modules"]
 }
