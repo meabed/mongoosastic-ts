@@ -1,3 +1,9 @@
+# 6.0.3 2022-12-27
+
+- No user-facing changes.
+- Renamed tests and lib folders
+- Improved release process
+
 # 6.0.1 2022-12-25
 
 - Fix tests
