@@ -15,7 +15,7 @@ module.exports = {
   diff: true,
   exit: true,
   extension: ['js', 'cjs', 'mjs', 'ts'],
-  file: ['./test/setup.ts', './test/teardown.ts'],
+  file: ['./__tests__/setup.ts', './__tests__/teardown.ts'],
   'inline-diffs': false,
   jobs: 2,
   'node-option': ['unhandled-rejections=strict'],
@@ -24,7 +24,7 @@ module.exports = {
   recursive: false,
   reporter: 'spec',
   require: ['ts-node/register', 'should', 'co-mocha'],
-  spec: ['./test/*.ts'],
+  spec: ['./__tests__/*.ts'],
   timeout: '10s',
   'trace-warnings': true,
 };
