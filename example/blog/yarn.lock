@@ -1387,10 +1387,10 @@ mongodb@4.12.1:
     "@aws-sdk/credential-providers" "^3.186.0"
     saslprep "^1.0.3"
 
-mongoosastic-ts@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/mongoosastic-ts/-/mongoosastic-ts-6.0.1.tgz#42fc5cf2f4249e20c7d27b25ab50fa2dcac03c43"
-  integrity sha512-6xHcgKaEYcQZ6WbFF1lyzhliH0cGBqyVirmBfKMZDd9CaB76d8k62s95FruFQLhK3yfxOnDbKJDjotXoysF+lw==
+mongoosastic-ts@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/mongoosastic-ts/-/mongoosastic-ts-6.0.2.tgz#c800b8dfc8f5657fae3f7ac572f3ca223e22279d"
+  integrity sha512-Tvh74MRCdIli/tKya44lm+B9n9m5RNTwO3P4h/hkKr+mPfaKXvJpA+OkOOL1qG6gI7xwByjTv74KQ3ZHYZ38oQ==
   dependencies:
     elasticsearch "16.7.3"
 
