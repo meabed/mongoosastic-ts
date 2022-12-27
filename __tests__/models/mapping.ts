@@ -1,5 +1,5 @@
-import { mongoosastic } from '../../lib/mongoosastic';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
+import { mongoosastic } from '../../src/mongoosastic';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../src/types';
 import { Document, Schema, model } from 'mongoose';
 
 export interface IMappingModel extends Document, MongoosasticDocument {

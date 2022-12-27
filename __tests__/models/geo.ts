@@ -1,5 +1,5 @@
-import { mongoosastic } from '../../lib/mongoosastic';
-import { MongoosasticDocument, MongoosasticModel } from '../../lib/types';
+import { mongoosastic } from '../../src/mongoosastic';
+import { MongoosasticDocument, MongoosasticModel } from '../../src/types';
 import { Document, Schema, model } from 'mongoose';
 
 export interface IGeoModel extends Document, MongoosasticDocument {

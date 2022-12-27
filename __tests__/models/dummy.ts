@@ -1,5 +1,5 @@
-import { mongoosastic } from '../../lib/mongoosastic';
-import { MongoosasticModel } from '../../lib/types';
+import { mongoosastic } from '../../src/mongoosastic';
+import { MongoosasticModel } from '../../src/types';
 import { Schema, model } from 'mongoose';
 
 const indexName = 'es-test';

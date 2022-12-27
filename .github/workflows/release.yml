@@ -1,16 +1,13 @@
-name: CI ES 8.5
+name: Release
 on:
   workflow_dispatch:
   workflow_call:
   push:
     paths:
-      - 'lib/**'
-      - 'test/**'
-      - 'package.json'
-      - 'package-lock.json'
+      - 'src/**'
       - 'yarn.lock'
     branches:
-      - '*'
+      - 'master'
 
 env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -18,7 +15,7 @@ env:
   CI: true
 
 jobs:
-  build:
+  Release:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -32,9 +29,18 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - uses: styfle/cancel-workflow-action@0.11.0
         with:
-          workflow_id: ci-8-5.yml
+          workflow_id: release.yml
           access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 30
+
       - uses: FranzDiebold/github-env-vars-action@v2
+
+      - name: Yarn
+        run: yarn install --frozen-lockfile
+
       - name: Configure sysctl limits
         run: |
           sudo swapoff -a
@@ -48,13 +54,14 @@ jobs:
           stack-version: 8.5.3
           security-enabled: false
 
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 30
-
-      - name: NPM install
-        uses: bahmutov/npm-install@v1
-
       - name: Test
         run: |
-          yarn test-ci
+          yarn test
+
+      - name: Release Prep
+        run: |
+          npm i -g semantic-release @semantic-release/git @semantic-release/github conventional-changelog-conventionalcommits
+
+      - name: Release
+        run: |
+          npx semantic-release --no-ci --debug

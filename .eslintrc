@@ -16,6 +16,7 @@
     "handle-callback-err": "off",
     "node/handle-callback-err": "off",
     "no-var": "off",
+    "no-var-requires": "off",
     "array-callback-return": "off",
     "multiline-ternary": "off",
     "@typescript-eslint/no-explicit-any": "off",

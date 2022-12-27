@@ -1,4 +1,4 @@
-import { Generator } from '../lib/mapping-generator';
+import { Generator } from '../src/mapping-generator';
 import { deleteIndexIfExists, sleep } from './helper';
 import { mappingModel } from './models/mapping';
 import { Schema, Types } from 'mongoose';

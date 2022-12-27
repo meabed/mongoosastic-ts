@@ -39,17 +39,17 @@
     "build": "rm -rf dist && tsc -p . --skipLibCheck",
     "changelog": "changelog mongoosastic/mongoosastic latest -m",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "lint": "eslint lib test",
+    "lint": "eslint src __tests__",
     "lint-fix": "yarn lint -- --fix",
-    "mocha": "nyc mocha --report lcovonly -- test/*-test.ts",
+    "mocha": "nyc mocha --report lcovonly -- __tests__/*-test.ts",
     "prepare": "yarn husky install",
-    "prettier": "prettier --write \"lib/**/*.{ts,tsx,js,jsx}\" \"test/**/*.{ts,tsx,js,jsx}\"",
+    "prettier": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" \"__tests__/**/*.{ts,tsx,js,jsx}\"",
     "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha",
     "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha"
   },
   "lint-staged": {
-    "lib/*.{ts,tsx,js,jsx}": "prettier --write",
-    "test/*.{ts,tsx,js,jsx}": "prettier --write",
+    "src/*.{ts,tsx,js,jsx}": "prettier --write",
+    "__tests__/*.{ts,tsx,js,jsx}": "prettier --write",
     "docs/**": "prettier --write",
     "examples/**": "prettier --write"
   },

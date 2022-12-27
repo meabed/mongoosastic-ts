@@ -1,5 +1,5 @@
-import { mongoosastic } from '../../lib/mongoosastic';
-import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../lib/types';
+import { mongoosastic } from '../../src/mongoosastic';
+import { MongoosasticDocument, MongoosasticModel, MongoosasticPluginOpts } from '../../src/types';
 import { Document, Schema, Types, model } from 'mongoose';
 
 export const bowlingBallModel = model('BowlingBall', new Schema());
