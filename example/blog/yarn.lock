@@ -1308,11 +1308,6 @@ lazy-cache@^1.0.3:
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
   integrity sha1-odePw6UEdMuAhF07O24dpJpEbo4=
 
-lodash.clonedeep@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
-  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
-
 lodash@^4.17.10:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
@@ -1392,13 +1387,12 @@ mongodb@4.12.1:
     "@aws-sdk/credential-providers" "^3.186.0"
     saslprep "^1.0.3"
 
-mongoosastic-ts@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/mongoosastic-ts/-/mongoosastic-ts-6.0.0.tgz#fc7988e9bb3b306f6aaf2176d65c6e9478bbba60"
-  integrity sha512-dWyFFg2+GCURXkxw216FE3/n94udx8RItgpTdHO4W2lyPCCcYJhZ4yHtHw/IMlr1ELIdaDszWbGwrnpno2WS9A==
+mongoosastic-ts@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/mongoosastic-ts/-/mongoosastic-ts-6.0.2.tgz#c800b8dfc8f5657fae3f7ac572f3ca223e22279d"
+  integrity sha512-Tvh74MRCdIli/tKya44lm+B9n9m5RNTwO3P4h/hkKr+mPfaKXvJpA+OkOOL1qG6gI7xwByjTv74KQ3ZHYZ38oQ==
   dependencies:
     elasticsearch "16.7.3"
-    lodash.clonedeep "4.5.0"
 
 mongoose@6.8.1:
   version "6.8.1"

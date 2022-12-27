@@ -11,6 +11,7 @@ on:
       - 'yarn.lock'
     branches:
       - '*'
+      - '**'
 
 env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
