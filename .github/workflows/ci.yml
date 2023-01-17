@@ -47,7 +47,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19
-          cache: 'yarn'
 
       - name: Yarn
         run: yarn install --frozen-lockfile
@@ -67,12 +66,10 @@ jobs:
 
       - name: Test
         run: |
-          yarn test
-
-      - name: Release Prep
-        run: |
-          npm i -g semantic-release @semantic-release/git @semantic-release/github conventional-changelog-conventionalcommits
+          yarn test-ci
 
       - name: Release
+        if: github.ref == 'refs/heads/develop'
         run: |
+          npm i -g semantic-release @semantic-release/git @semantic-release/github conventional-changelog-conventionalcommits
           npx semantic-release --no-ci --debug
