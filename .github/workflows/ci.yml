@@ -9,6 +9,7 @@ on:
       - 'package.json'
       - 'yarn.lock'
       - 'release.config.js'
+      - '.github/workflows/ci.yml'
     branches:
       - '*'
       - '**'
@@ -23,6 +24,10 @@ jobs:
   CI:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
+    permissions:
+      packages: write
+      contents: write
 
     services:
       mongodb:
@@ -42,6 +47,10 @@ jobs:
           fetch-depth: 30
 
       - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
 
       - name: Yarn
         run: yarn install --frozen-lockfile
@@ -61,12 +70,10 @@ jobs:
 
       - name: Test
         run: |
-          yarn test
-
-      - name: Release Prep
-        run: |
-          npm i -g semantic-release @semantic-release/git @semantic-release/github conventional-changelog-conventionalcommits
+          yarn test-ci
 
       - name: Release
+        if: github.ref == 'refs/heads/develop'
         run: |
+          npm i -g semantic-release @semantic-release/git @semantic-release/github conventional-changelog-conventionalcommits
           npx semantic-release --no-ci --debug
