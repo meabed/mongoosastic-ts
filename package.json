@@ -54,12 +54,11 @@
     "examples/**": "prettier --write"
   },
   "dependencies": {
-    "elasticsearch": "16.7.3"
+    "@elastic/elasticsearch": "8.6.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.0.0",
     "@types/chai": "4.3.4",
-    "@types/elasticsearch": "5.0.40",
     "@types/expect": "24.3.0",
     "@types/mocha": "10.0.1",
     "@types/should": "13.0.0",

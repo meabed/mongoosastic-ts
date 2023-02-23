@@ -1,4 +1,5 @@
-import { Client, IndexDocumentParams } from 'elasticsearch';
+import { Client } from '@elastic/elasticsearch';
+import { IndexRequest } from '@elastic/elasticsearch/lib/api/types';
 import { EventEmitter } from 'events';
 import { Document, LeanDocument, Model, Schema, Types } from 'mongoose';
 
@@ -51,7 +52,7 @@ export interface MongoosasticDocument {
   unIndex: (opt?: any) => Promise<any>;
 }
 
-export interface MongoosasticBulkIndexOpts extends Partial<IndexDocumentParams<any>> {
+export interface MongoosasticBulkIndexOpts extends Partial<IndexRequest<any>> {
   model: any;
   _id?: string;
 }

@@ -7,7 +7,9 @@ import {
   MongoosasticPluginOpts,
   MongoosasticSchema,
 } from './types';
-import { ConfigOptions, Client as EsClient, IndexDocumentParams, SearchParams } from 'elasticsearch';
+import { Client as EsClient } from '@elastic/elasticsearch';
+import { IndexRequest } from '@elastic/elasticsearch/lib/api/types';
+import { ClientOptions } from '@elastic/elasticsearch/lib/client';
 import events from 'events';
 import { Model, Query, Schema } from 'mongoose';
 
@@ -20,7 +22,7 @@ function isStringArray(arr: any) {
 }
 
 function createEsClient(options: MongoosasticPluginOpts) {
-  const esOptions: ConfigOptions = {};
+  const esOptions: ClientOptions = {};
 
   const {
     host = 'localhost',
@@ -403,7 +405,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       _opts.id = this._id.toString();
       _opts.body = serialModel;
       // indexing log in-case of slow queries in elasticsearch
-      return esClient.index(_opts as IndexDocumentParams<any>);
+      return esClient.index(_opts as IndexRequest<any>);
     }
   };
 
