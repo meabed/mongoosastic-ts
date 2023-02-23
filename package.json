@@ -57,7 +57,7 @@
     "elasticsearch": "16.7.3"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "4.0.0",
+    "@trivago/prettier-plugin-sort-imports": "4.1.0",
     "@types/chai": "4.3.4",
     "@types/elasticsearch": "5.0.40",
     "@types/expect": "24.3.0",
