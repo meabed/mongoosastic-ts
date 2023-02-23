@@ -1,6 +1,6 @@
 {
   "name": "mongoosastic-ts",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "A mongoose plugin that indexes models into elastic search",
   "keywords": [
     "mongoose-sync-elasticsearch",
@@ -34,6 +34,10 @@
   ],
   "main": "dist/mongoosastic.js",
   "types": "dist/mongoosastic.d.ts",
+  "typings": "dist/mongoosastic.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "authors": "./scripts/update_authors.sh",
     "build": "rm -rf dist && tsc -p . --skipLibCheck",
@@ -43,6 +47,7 @@
     "lint-fix": "yarn lint -- --fix",
     "mocha": "nyc mocha --report lcovonly -- __tests__/*-test.ts",
     "prepare": "yarn husky install",
+    "prepublishOnly": "yarn build",
     "prettier": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" \"__tests__/**/*.{ts,tsx,js,jsx}\"",
     "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha",
     "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha"
