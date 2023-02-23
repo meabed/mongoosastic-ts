@@ -32,6 +32,9 @@
       "url": "https://meabed.com"
     }
   ],
+  "files": [
+    "dist"
+  ],
   "main": "dist/mongoosastic.js",
   "types": "dist/mongoosastic.d.ts",
   "scripts": {
