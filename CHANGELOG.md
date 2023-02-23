@@ -1,5 +1,9 @@
-# 6.0.3 2022-12-27
+# 6.0.3 2022-02-24
 
+- Fix release dist folder
+- Update dependencies
+
+# 6.0.2 2022-12-27
 - No user-facing changes.
 - Renamed tests and lib folders
 - Improved release process
