@@ -32,11 +32,12 @@
       "url": "https://meabed.com"
     }
   ],
+  "main": "dist/mongoosastic.js",
+  "types": "dist/mongoosastic.d.ts",
+  "typings": "dist/mongoosastic.d.ts",
   "files": [
     "dist"
   ],
-  "main": "dist/mongoosastic.js",
-  "types": "dist/mongoosastic.d.ts",
   "scripts": {
     "authors": "./scripts/update_authors.sh",
     "build": "rm -rf dist && tsc -p . --skipLibCheck",
@@ -46,6 +47,7 @@
     "lint-fix": "yarn lint -- --fix",
     "mocha": "nyc mocha --report lcovonly -- __tests__/*-test.ts",
     "prepare": "yarn husky install",
+    "prepublishOnly": "yarn build",
     "prettier": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" \"__tests__/**/*.{ts,tsx,js,jsx}\"",
     "test": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha",
     "test-ci": "TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha"
