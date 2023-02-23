@@ -7,6 +7,8 @@
 // @param field
 // @return the type or false
 //
+import { IndicesPutMappingRequest } from '@elastic/elasticsearch/lib/api/types';
+
 function getTypeFromPaths(
   paths: {
     [p: string]: {
@@ -51,8 +53,8 @@ function getTypeFromPaths(
 // @param inPrefix
 // @return the mapping
 //
-function getMapping(cleanTree: object, inPrefix: string) {
-  const mapping: any = {};
+function getMapping(cleanTree: object, inPrefix: string): IndicesPutMappingRequest['properties'] {
+  const mapping: IndicesPutMappingRequest['properties'] = {} as IndicesPutMappingRequest['properties'];
   const implicitFields = [];
   let hasEsIndex = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
@@ -329,7 +331,7 @@ function nestedSchema(
 
 export const Generator = {
   // Schema<any, any, any>
-  generateMapping: function generateMapping(schema: any): { properties: any } {
+  generateMapping: function generateMapping(schema: any): IndicesPutMappingRequest['properties'] {
     const cleanTree = getCleanTree(schema.tree, schema.paths, '', true);
     delete cleanTree[schema.get('versionKey')];
     const mapping = getMapping(cleanTree, '');

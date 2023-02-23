@@ -8,7 +8,7 @@ import {
   MongoosasticSchema,
 } from './types';
 import { Client as EsClient } from '@elastic/elasticsearch';
-import { IndexRequest } from '@elastic/elasticsearch/lib/api/types';
+import { IndexRequest, IndicesPutMappingRequest } from '@elastic/elasticsearch/lib/api/types';
 import { ClientOptions } from '@elastic/elasticsearch/lib/client';
 import events from 'events';
 import { Model, Query, Schema } from 'mongoose';
@@ -78,7 +78,7 @@ async function createMappingIfNotPresent(options: {
 }) {
   const { client, indexName, typeName, schema, properties, mappings, settings } = options;
 
-  const completeMapping: Record<string, any> = {};
+  const completeMapping: IndicesPutMappingRequest['properties'] = {};
 
   if (!mappings) {
     completeMapping[typeName] = Generator.generateMapping(schema);
@@ -100,9 +100,8 @@ async function createMappingIfNotPresent(options: {
 
   if (exists) {
     return await client.indices.putMapping({
-      type: undefined, // deprecated -- use esVersion 7.x
       index: indexName,
-      body: inputMapping,
+      properties: inputMapping,
     });
   }
 
@@ -181,15 +180,12 @@ type DeleteOpts = {
   client: EsClient;
   model: any;
   routing?: string;
-  tries?: number;
 };
 
 async function deleteByMongoId(options: DeleteOpts) {
-  const { index, client, model, tries = 0, routing } = options;
+  const { index, client, model, routing } = options;
   return client
     .delete({
-      maxRetries: tries,
-      type: undefined, // deprecated -- use esVersion 7.x
       index: index,
       id: model._id.toString(),
       routing: routing,
