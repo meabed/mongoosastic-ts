@@ -8,7 +8,7 @@ import {
   MongoosasticSchema,
 } from './types';
 import { Client as EsClient } from '@elastic/elasticsearch';
-import { IndexRequest, IndicesPutMappingRequest } from '@elastic/elasticsearch/lib/api/types';
+import { IndexRequest, SearchRequest } from '@elastic/elasticsearch/lib/api/types';
 import { ClientOptions } from '@elastic/elasticsearch/lib/client';
 import events from 'events';
 import { Model, Query, Schema } from 'mongoose';
@@ -24,28 +24,12 @@ function isStringArray(arr: any) {
 function createEsClient(options: MongoosasticPluginOpts) {
   const esOptions: ClientOptions = {};
 
-  const {
-    host = 'localhost',
-    port = 9200,
-    protocol = 'http',
-    auth = null,
-    keepAlive = false,
-    hosts,
-    log = null,
-  } = options;
-  if (Array.isArray(hosts)) {
-    esOptions.host = hosts;
+  const { esUrls = 'http://localhost:9200', keepAlive = false } = options;
+  if (Array.isArray(esUrls)) {
+    esOptions.nodes = esUrls;
   } else {
-    esOptions.host = {
-      host,
-      port,
-      protocol,
-      auth,
-      keepAlive,
-    };
+    esOptions.node = esUrls;
   }
-
-  esOptions.log = log;
 
   return new EsClient(esOptions);
 }
@@ -78,14 +62,14 @@ async function createMappingIfNotPresent(options: {
 }) {
   const { client, indexName, typeName, schema, properties, mappings, settings } = options;
 
-  const completeMapping: IndicesPutMappingRequest['properties'] = {};
+  const completeMapping = {};
 
   if (!mappings) {
     completeMapping[typeName] = Generator.generateMapping(schema);
     completeMapping[typeName].properties = filterMappingFromMixed(completeMapping[typeName].properties);
     if (properties) {
       Object.keys(properties).map((key) => {
-        completeMapping[typeName].properties[key] = properties[key];
+        completeMapping[typeName].fields[key] = properties[key];
       });
     }
   } else {
@@ -399,7 +383,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
       return this;
     } else {
       _opts.id = this._id.toString();
-      _opts.body = serialModel;
+      _opts.document = serialModel;
       // indexing log in-case of slow queries in elasticsearch
       return esClient.index(_opts as IndexRequest<any>);
     }
@@ -566,8 +550,8 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     setIndexNameIfUnset(this.modelName);
 
-    const esQuery: SearchParams = {
-      body: query,
+    const esQuery: SearchRequest = {
+      query: query,
       index: opts.index || indexName,
     };
 
@@ -576,19 +560,19 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
     }
 
     if (opts.highlight) {
-      esQuery.body.highlight = opts.highlight;
+      esQuery.highlight = opts.highlight;
     }
 
     if (opts.suggest) {
-      esQuery.body.suggest = opts.suggest;
+      esQuery.suggest = opts.suggest;
     }
 
     if (opts.aggs) {
-      esQuery.body.aggs = opts.aggs;
+      esQuery.aggs = opts.aggs;
     }
 
     if (opts.min_score) {
-      esQuery.body.min_score = opts.min_score;
+      esQuery.min_score = opts.min_score;
     }
 
     Object.keys(opts).forEach((opt) => {
@@ -600,7 +584,7 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
         if (isString(opts.sort) || isStringArray(opts.sort)) {
           esQuery.sort = opts.sort;
         } else {
-          esQuery.body.sort = opts.sort;
+          esQuery.sort = opts.sort;
         }
       }
     });
@@ -666,7 +650,6 @@ export function mongoosastic(schema: MongoosasticSchema<any>, pluginOpts: Mongoo
 
     const opts: DeleteOpts = {
       index: indexName,
-      tries: 3,
       model: doc,
       client: esClient,
     };

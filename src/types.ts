@@ -62,12 +62,7 @@ export interface MongoosasticSchema<T> extends Schema<T> {
 }
 
 export interface MongoosasticPluginOpts<T = any> {
-  log?: string;
-  auth?: string;
-  protocol?: string;
-  port?: number;
-  host?: string;
-  hosts?: string[];
+  esUrls?: string | string[];
   esClient?: Client;
   esVersion?: string;
   keepAlive?: boolean;

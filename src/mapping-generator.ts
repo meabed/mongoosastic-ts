@@ -7,7 +7,7 @@
 // @param field
 // @return the type or false
 //
-import { IndicesPutMappingRequest } from '@elastic/elasticsearch/lib/api/types';
+import { IndicesPutMappingRequest, MappingProperty } from '@elastic/elasticsearch/lib/api/types';
 
 function getTypeFromPaths(
   paths: {
@@ -54,7 +54,7 @@ function getTypeFromPaths(
 // @return the mapping
 //
 function getMapping(cleanTree: object, inPrefix: string): IndicesPutMappingRequest['properties'] {
-  const mapping: IndicesPutMappingRequest['properties'] = {} as IndicesPutMappingRequest['properties'];
+  const mapping = {} as IndicesPutMappingRequest['properties'];
   const implicitFields = [];
   let hasEsIndex = false;
   const prefix = inPrefix !== '' ? `${inPrefix}.` : inPrefix;
@@ -64,7 +64,7 @@ function getMapping(cleanTree: object, inPrefix: string): IndicesPutMappingReque
       continue;
     }
     const value = cleanTree[field];
-    mapping[field] = {};
+    mapping[field] = {} as MappingProperty;
     mapping[field].type = value.type;
 
     // Check if field was explicity indexed, if not keep track implicitly
@@ -77,18 +77,18 @@ function getMapping(cleanTree: object, inPrefix: string): IndicesPutMappingReque
     // If there is no type, then it's an object with subfields.
     if (typeof value === 'object' && !value.type) {
       mapping[field].type = 'object';
-      mapping[field].properties = getMapping(value, prefix + field);
+      mapping[field].fields = getMapping(value, prefix + field);
     }
 
     // If it is a objectid make it a string.
     if (value.type === 'objectid') {
       if (value.ref && value.es_schema) {
         mapping[field].type = 'object';
-        mapping[field].properties = getMapping(value, prefix + field);
+        mapping[field].fields = getMapping(value, prefix + field);
         continue;
       }
       // do not continue here so we can handle other es_ options
-      mapping[field].type = 'string';
+      mapping[field].type = 'text';
     }
 
     // If indexing a number, and no es_type specified, default to long
@@ -111,7 +111,7 @@ function getMapping(cleanTree: object, inPrefix: string): IndicesPutMappingReque
     }
 
     // Set default string type
-    if (mapping[field] && mapping[field].type === 'string') {
+    if (mapping[field] && mapping[field].type === 'text') {
       const textType = {
         type: 'text',
         fields: {
@@ -335,7 +335,7 @@ export const Generator = {
     const cleanTree = getCleanTree(schema.tree, schema.paths, '', true);
     delete cleanTree[schema.get('versionKey')];
     const mapping = getMapping(cleanTree, '');
-    return { properties: mapping };
+    return { mapping };
   },
   getCleanTree: function (schema: any) {
     return getCleanTree(schema.tree, schema.paths, '', true);
