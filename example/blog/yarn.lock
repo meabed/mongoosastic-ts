@@ -624,10 +624,10 @@ mongoosastic-ts@6.0.3:
   dependencies:
     elasticsearch "16.7.3"
 
-mongoose@7.2.3:
-  version "7.2.3"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.2.3.tgz#d20fa2a8beda9aae54b293d584ddda80d36febdf"
-  integrity sha512-ClHD73HiqMk4hcOhdlZxluldokZfXvkrxjdKuqI7UQWLM71OIoy+n+OS+OHz4qJhS+/UaPzemQDKYtVrl4l0Ig==
+mongoose@7.2.4:
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.2.4.tgz#0cbccd23746c5bd82a4330e83ea2b2c52e03c044"
+  integrity sha512-BWcgShV2WH1rspICiJKLPi7QssTebpGJ23Nyk7qG0TMEE/OEAlsQKEhI7VlrXg4ZnoOcHgG+N+upW9tj17TTQg==
   dependencies:
     bson "^5.3.0"
     kareem "2.5.1"
