@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "4.2.0",
-    "@types/chai": "4.3.5",
+    "@types/chai": "4.3.6",
     "@types/elasticsearch": "5.0.40",
     "@types/expect": "24.3.0",
     "@types/mocha": "10.0.1",
