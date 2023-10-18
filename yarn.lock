@@ -551,10 +551,10 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.9.tgz#144d762491967db8c6dea38e03d2206c2623feec"
   integrity sha512-69TtiDzu0bcmKQv3yg1Zx409/Kd7r0b5F1PfpYJfSHzLGtB53547V4u+9iqKYsTu/O2ai6KTb0TInNpvuQ3qmg==
 
-"@types/elasticsearch@5.0.41":
-  version "5.0.41"
-  resolved "https://registry.yarnpkg.com/@types/elasticsearch/-/elasticsearch-5.0.41.tgz#519fa18805315ff03fecc594bce8fb6020213f93"
-  integrity sha512-6AFvjM3NBEBVd+se5Pim5+MfuASuOme1VDKbKIYrNcRvmD+stgdyD5f6A16tVV948s1Luygkq74uv7O970fLkA==
+"@types/elasticsearch@5.0.42":
+  version "5.0.42"
+  resolved "https://registry.yarnpkg.com/@types/elasticsearch/-/elasticsearch-5.0.42.tgz#fbcf86b2479611a9caf2ab3ff053aec7f5ec2c4a"
+  integrity sha512-n0CE/6A1BppqfoSeE+Y8y87CHqeA2Nj+kPjcAwK8WSPp+gvMvjVnb60WnZSG+Wf7v0xYRToLbjfXJ2sI3cVzdw==
 
 "@types/expect@24.3.0":
   version "24.3.0"
@@ -597,10 +597,10 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
   integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
-"@types/mocha@10.0.2":
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.2.tgz#96d63314255540a36bf24da094cce7a13668d73b"
-  integrity sha512-NaHL0+0lLNhX6d9rs+NSt97WH/gIlRHmszXbQ/8/MV/eVcFNdeJ/GYhrFuUc8K7WuPhRhTSdMkCp8VMzhUq85w==
+"@types/mocha@10.0.3":
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.3.tgz#4804fe9cd39da26eb62fa65c15ea77615a187812"
+  integrity sha512-RsOPImTriV/OE4A9qKjMtk2MnXiuLLbcO3nCXK+kvq4nr0iMfFgpjaX3MPLb6f7+EL1FGSelYvuJMV6REH+ZPQ==
 
 "@types/node@*":
   version "16.11.7"
