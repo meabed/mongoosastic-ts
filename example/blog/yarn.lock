@@ -41,10 +41,10 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/body-parser@1.19.3":
-  version "1.19.3"
-  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.3.tgz#fb558014374f7d9e56c8f34bab2042a3a07d25cd"
-  integrity sha512-oyl4jvAfTGX9Bt6Or4H9ni1Z447/tQuxnZsytsCaExKlmJiU8sFgnIBRzJUpKwB5eWn9HuBYlUlVA74q/yN0eQ==
+"@types/body-parser@1.19.4":
+  version "1.19.4"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.4.tgz#78ad68f1f79eb851aa3634db0c7f57f6f601b462"
+  integrity sha512-N7UDG0/xiPQa2D/XrVJXjkWbpqHCd2sBaB32ggRF2l83RhPfamgKGF8gwwqyksS95qUS5ZYF9aF+lLPRlwI2UA==
   dependencies:
     "@types/connect" "*"
     "@types/node" "*"
@@ -639,10 +639,10 @@ mongoosastic-ts@6.0.3:
   dependencies:
     elasticsearch "16.7.3"
 
-mongoose@7.6.2:
-  version "7.6.2"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.6.2.tgz#c55c8c41352a6e5223bd7b60aa2715331e1d2b65"
-  integrity sha512-OVx6RWbfNOzBbfTvXoOkgZmaizdXDU/B/KbBjietXQoInSg/OSULjOavXJzL51XWFkbefqkOvbeE07DfvW6FkQ==
+mongoose@7.6.3:
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.6.3.tgz#b06507dd164ad4426013eeb266d54aa1e5178092"
+  integrity sha512-moYP2qWCOdWRDeBxqB/zYwQmQnTBsF5DoolX5uPyI218BkiA1ujGY27P0NTd4oWIX+LLkZPw0LDzlc/7oh1plg==
   dependencies:
     bson "^5.5.0"
     kareem "2.5.1"
