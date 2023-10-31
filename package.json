@@ -82,7 +82,7 @@
     "husky": "8.0.3",
     "lint-staged": "15.0.2",
     "mocha": "10.2.0",
-    "mongoose": "7.6.4",
+    "mongoose": "8.0.0",
     "nyc": "15.1.0",
     "prettier": "3.0.3",
     "pretty-quick": "3.1.3",
