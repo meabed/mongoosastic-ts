@@ -81,7 +81,7 @@
     "eslint-plugin-promise": "6.1.1",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "mongoose": "8.2.3",
     "nyc": "15.1.0",
     "prettier": "3.2.5",
