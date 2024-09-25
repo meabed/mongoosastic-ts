@@ -11,7 +11,7 @@
     "express": "4.20.0",
     "pug": "3.0.3",
     "mongoosastic-ts": "6.0.3",
-    "mongoose": "8.5.2"
+    "mongoose": "8.5.3"
   },
   "devDependencies": {
     "@types/body-parser": "1.19.5",
