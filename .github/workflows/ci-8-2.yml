@@ -55,7 +55,7 @@ jobs:
           stack-version: 8.2.2
           security-enabled: false
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 30
 
